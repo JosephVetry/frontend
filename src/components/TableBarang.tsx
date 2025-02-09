@@ -20,7 +20,7 @@ export default function Component() {
   useEffect(() => {
     axios.get("http://localhost:3000/api/pharmacy_details")
       .then(response => {
-        setProducts(response.data); // Assuming API returns an array of products
+        setProducts(response.data); 
       })
       .catch(error => {
         console.error("Error fetching products:", error);
@@ -38,13 +38,15 @@ export default function Component() {
 
   return (
     <div className="flex">
+      
       <main className="flex-1 ml-48 mt-16 p-4">
+      <h2 className="text-2xl font-semibold mb-4">Pharmacy Items</h2>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
               <Table.HeadCell>Product Name</Table.HeadCell>
               <Table.HeadCell>Buy Price</Table.HeadCell>
-              <Table.HeadCell>Sell Price</Table.HeadCell>
+              
               <Table.HeadCell>Qty</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
@@ -56,9 +58,7 @@ export default function Component() {
                   <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
                     {formatCurrency(product.buy_price)}
                   </Table.Cell>
-                  <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
-                    {formatCurrency(product.sell_price)}
-                  </Table.Cell>
+                 
                   <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
                     {product.total_quantity}
                   </Table.Cell>

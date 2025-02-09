@@ -6,7 +6,7 @@ import AddSupplier from './pages/AddSupplier'
 import DetailTransaksi from './pages/DetailTransaksi'
 import History from './pages/HistoryTransaction'
 import ItemDetail from "./pages/itemDetail"
-import DetailHistory from './pages/DetailHistory'
+import HistoryDetail from "./pages/DetailHistory"
 
 export default function App() {
   return (
@@ -16,11 +16,12 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/supplier" element={<Supplier />} />
-        <Route path="/detailtransaksi" element={<DetailTransaksi/>} />
+        <Route path="/detailtransaksi/:supplierId" element={<DetailTransaksi />} />
         <Route path="/addsupplier" element={<AddSupplier />} />
         <Route path="/history" element={<History />} />
-        <Route path="/historydetail" element={<DetailHistory />} />
         <Route path="/itemdetail" element={<ItemDetail />} />
+        <Route path="/historydetail/:transactionId" element={<HistoryDetail />} />
+
       </Routes>
     </Router>
   );

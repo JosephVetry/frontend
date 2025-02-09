@@ -1,56 +1,117 @@
 import { useState } from "react";
-import { Textarea, TextInput, Label, Button } from "flowbite-react";
+import { Textarea, TextInput, Label, Button, Modal } from "flowbite-react";
+import { useNavigate } from "react-router-dom";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
-    company: "",
+    supplier_name: "",
+    phone_number: "",
+    address: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [message, setMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/supplier/add-supplier", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add supplier");
+      }
+
+      setMessage("Supplier successfully added!");
+      setShowModal(true);
+
+      // Reset form
+      setFormData({ supplier_name: "", phone_number: "", address: "" });
+
+      // Redirect to /supplier after 3 seconds
+      setTimeout(() => {
+        setShowModal(false);
+        navigate("/supplier");
+      }, 3000);
+    } catch (error: any) {
+      setMessage(`Error: ${error.message}`);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
-      <div className="gap-4">
+    <div>
+      <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
+        {/* Supplier Name */}
         <div>
-          <Label htmlFor="Nama Supplier" value="Nama Supplier" />
-          <TextInput id="namaSupplier" name="namaSupplier" type="text" required onChange={handleChange} />
+          <Label htmlFor="supplier_name" value="Nama Supplier" />
+          <TextInput
+            id="supplier_name"
+            name="supplier_name"
+            type="text"
+            required
+            value={formData.supplier_name}
+            onChange={handleChange}
+          />
         </div>
-      </div>
 
-      {/* Phone & Company */}
-      <div className="gap-4">
+        {/* Phone Number */}
         <div>
-          <Label htmlFor="phone" value="Phone Number" />
-          <TextInput id="phone" name="phone" type="tel"  placeholder="081122334455" required onChange={handleChange} />
+          <Label htmlFor="phone_number" value="Phone Number" />
+          <TextInput
+            id="phone_number"
+            name="phone_number"
+            type="tel"
+            placeholder="081122334455"
+            required
+            value={formData.phone_number}
+            onChange={handleChange}
+          />
         </div>
-      </div>
 
-      <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Alamat
-      </label>
-      <Textarea
-        id="alamat"
-        placeholder="Alamat"
-        rows={4}
-        className="w-full"
-      />
+        {/* Address */}
+        <div>
+          <Label htmlFor="address" value="Alamat" />
+          <Textarea
+            id="address"
+            name="address"
+            placeholder="Alamat"
+            rows={4}
+            required
+            value={formData.address}
+            onChange={handleChange}
+            className="w-full"
+          />
+        </div>
 
-      {/* Submit Button */}
-      <Button type="submit" className="w-full">Submit</Button>
-    </form>
+        {/* Submit Button */}
+        <Button type="submit" className="w-full">Submit</Button>
+
+        {/* Message Feedback */}
+        {message && <p className="text-center text-green-600">{message}</p>}
+      </form>
+
+      {/* Success Modal */}
+      <Modal show={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Header>Success</Modal.Header>
+        <Modal.Body>
+          <p>Supplier successfully added! Redirecting...</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => navigate("/supplier")}>Go Now</Button>
+        </Modal.Footer>
+      </Modal>
+    </div>
   );
 };
 

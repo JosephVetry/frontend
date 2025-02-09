@@ -1,102 +1,100 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-interface CartItem {
-  id: number;
-  name: string;
-  size: string;
-  color: string;
-  price: number;
-  image: string;
-  quantity: number;
+interface Supplier {
+  _id: string;
+  supplier_name: string;
 }
 
-const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Basic Tee 6-Pack",
-      size: "XXS",
-      color: "White",
-      price: 50,
-      image:
-        "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80",
-      quantity: 1,
-    },
-    {
-      id: 2,
-      name: "Basic Tee 6-Pack",
-      size: "XXS",
-      color: "White",
-      price: 50,
-      image:
-        "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=830&q=80",
-      quantity: 1,
-    },
-  ]);
+interface Product {
+  id_product: string;
+  quantity: number;
+  price_per_unit: number;
+  _id: string;
+  product_name:any;
+}
 
-//   const updateQuantity = (id: number, quantity: number) => {
-//     setCartItems((prev) =>
-//       prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-//     );
-//   };
+interface Transaction {
+  _id: string;
+  id_supplier: Supplier;
+  products: Product[];
+  amount_paid: number;
+  total_transaction_price: number;
+  is_completed: boolean;
+  purchase_date: string;
+  total_qty: number;
+  __v: number;
 
-  const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const total = subtotal
+}
+
+const TransactionDetails = () => {
+  const { transactionId } = useParams();
+  const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTransaction = async () => {
+      if (!transactionId) return;
+
+      try {
+        const response = await fetch(`http://localhost:3000/api/transaction/${transactionId}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch transaction details");
+        }
+        const data: Transaction = await response.json();
+        setTransaction(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransaction();
+  }, [transactionId]);
+
+  if (loading) return <p>Loading transaction...</p>;
+  if (error) return <p>Error: {error}</p>;
+  if (!transaction) return <p>No transaction found.</p>;
 
   return (
-    <section className="mt-16"> {/* Sesuaikan angka ini dengan tinggi navbar */}
-  <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-    <div className="mx-auto max-w-3xl">
-      <header className="text-center">
-        <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Detail Transaction</h1>
-      </header>
-      <div className="mt-8">
-        <ul className="space-y-4">
-          {cartItems.map((item) => (
-            <li key={item.id} className="flex items-center gap-4">
-              <img src={item.image} alt={item.name} className="size-16 rounded-sm object-cover" />
-              <div>
-                <h3 className="text-sm text-gray-900">{item.name}</h3>
-                <dl className="mt-0.5 space-y-px text-[10px] text-gray-600">
-                  <div>
-                    <dt className="inline">Size:</dt>
-                    <dd className="inline">{item.size}</dd>
-                  </div>
-                  <div>
-                    <dt className="inline">Color:</dt>
-                    <dd className="inline">{item.color}</dd>
-                  </div>
-                </dl>
-              </div>
-              <div className="flex flex-1 items-center justify-end gap-2">
-              <span className="h-8 w-12 flex items-center justify-center rounded-sm border border-gray-200 bg-gray-50 text-xs text-gray-600">
-                  {item.quantity}
-                </span>
-
-              </div>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-8 flex justify-end border-t border-gray-100 pt-8">
-          <div className="w-screen max-w-lg space-y-4">
-            <dl className="space-y-0.5 text-sm text-gray-700">
-              <div className="flex justify-between">
-                <dt>Subtotal</dt>
-                <dd>Rp. {subtotal.toFixed(2)}</dd>
-              </div>
-              <div className="flex justify-between !text-base font-medium">
-                <dt>Total</dt>
-                <dd>Rp. {total.toFixed(2)}</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </div>
+    <div className="max-w-4xl mx-auto mt-16 p-6 bg-white shadow-lg rounded-lg">
+      <h1 className="text-2xl font-bold mb-4">Transaction Details</h1>
+      <p><strong>Supplier:</strong> {transaction?.id_supplier?.supplier_name}</p>
+      <p><strong>Purchase Date:</strong> {transaction?.purchase_date ? new Date(transaction.purchase_date).toLocaleString() : "N/A"}</p>
+      <p><strong>Total Quantity:</strong> {transaction?.total_qty}</p>
+      <p><strong>Total Price:</strong> Rp. {transaction?.total_transaction_price?.toLocaleString()}</p>
+      <p><strong>Amount Paid:</strong> Rp. {transaction?.amount_paid?.toLocaleString()}</p>
+      <p><strong>Status:</strong> {transaction?.is_completed ? "Completed" : "Pending"}</p>
+      
+      <h2 className="text-xl font-bold mt-6">Products</h2>
+      <table className="w-full mt-4 border-collapse border border-gray-300">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="border border-gray-300 px-4 py-2 text-left">Product Name</th>
+            <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
+            <th className="border border-gray-300 px-4 py-2 text-center">Price per Unit</th>
+            <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transaction?.products?.map((product) => (
+            <tr key={product._id} className="border-b border-gray-300">
+              <td className="border border-gray-300 px-4 py-2">{product.product_name}</td>
+              <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity}</td>
+              <td className="border border-gray-300 px-4 py-2 text-center">Rp. {product.price_per_unit.toLocaleString()}</td>
+              <td className="border border-gray-300 px-4 py-2 text-center">Rp. {(product.quantity * product.price_per_unit).toLocaleString()}</td>
+            </tr>
+          )) || (
+            <tr>
+              <td colSpan={4} className="text-center py-4">No products found.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
     </div>
-  </div>
-</section>
-
   );
 };
 
-export default Cart;
+export default TransactionDetails;
