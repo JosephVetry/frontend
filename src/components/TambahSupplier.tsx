@@ -34,7 +34,7 @@ const RegistrationForm = () => {
       <div className="gap-4">
         <div>
           <Label htmlFor="phone" value="Phone Number" />
-          <TextInput id="phone" name="phone" type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890" required onChange={handleChange} />
+          <TextInput id="phone" name="phone" type="tel"  placeholder="081122334455" required onChange={handleChange} />
         </div>
       </div>
 

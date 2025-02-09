@@ -2,7 +2,7 @@
 "use client";
 import { Link } from "react-router-dom";
 import { Sidebar } from "flowbite-react";
-import { HiChartPie, HiShoppingBag, HiUser } from "react-icons/hi";
+import { HiChartPie, HiOutlineClipboardList, HiUser } from "react-icons/hi";
 
 export default function Component() {
   return (
@@ -12,7 +12,7 @@ export default function Component() {
           <Sidebar.ItemGroup>
             <Sidebar.Item as={Link} to="/dashboard" icon={HiChartPie}>Dashboard</Sidebar.Item>
             <Sidebar.Item as={Link} to="/supplier" icon={HiUser}>Supplier</Sidebar.Item>
-            <Sidebar.Item as={Link} to="/products" icon={HiShoppingBag}>Products</Sidebar.Item>
+            <Sidebar.Item as={Link} to="/history" icon={HiOutlineClipboardList}>History</Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
       </Sidebar>

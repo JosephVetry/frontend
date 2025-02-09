@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 interface CartItem {
   id: number;
@@ -45,16 +46,14 @@ const Cart = () => {
   };
 
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const vat = subtotal * 0.1;
-  const discount = 20;
-  const total = subtotal + vat - discount;
+  const total = subtotal
 
   return (
     <section className="mt-16"> {/* Sesuaikan angka ini dengan tinggi navbar */}
   <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
     <div className="mx-auto max-w-3xl">
       <header className="text-center">
-        <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Detail</h1>
+        <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Detail Transaction</h1>
       </header>
       <div className="mt-8">
         <ul className="space-y-4">
@@ -72,6 +71,9 @@ const Cart = () => {
                     <dt className="inline">Color:</dt>
                     <dd className="inline">{item.color}</dd>
                   </div>
+                  <Link to={`/itemdetail/${item.id}`} className="text-blue-600 hover:underline">
+                      Detail
+                  </Link>
                 </dl>
               </div>
               <div className="flex flex-1 items-center justify-end gap-2">
@@ -101,19 +103,11 @@ const Cart = () => {
             <dl className="space-y-0.5 text-sm text-gray-700">
               <div className="flex justify-between">
                 <dt>Subtotal</dt>
-                <dd>£{subtotal.toFixed(2)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>VAT</dt>
-                <dd>£{vat.toFixed(2)}</dd>
-              </div>
-              <div className="flex justify-between">
-                <dt>Discount</dt>
-                <dd>-£{discount.toFixed(2)}</dd>
+                <dd>Rp. {subtotal.toFixed(2)}</dd>
               </div>
               <div className="flex justify-between !text-base font-medium">
                 <dt>Total</dt>
-                <dd>£{total.toFixed(2)}</dd>
+                <dd>Rp. {total.toFixed(2)}</dd>
               </div>
             </dl>
             <div className="flex justify-end">

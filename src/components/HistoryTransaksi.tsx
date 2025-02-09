@@ -2,16 +2,12 @@
 
 import { Table, Button } from "flowbite-react";
 import { Link } from "react-router-dom";
-import AddButton from './Button'
 
 export default function Component() {
   return (
     <div className="flex">
         <main className="flex-1 ml-48 mt-16 p-4">
         <div className="overflow-x-auto">
-          <div className="flex mb-2">
-            <AddButton/>
-          </div>
           <Table hoverable>
             <Table.Head>
               <Table.HeadCell>Supplier Name</Table.HeadCell>
@@ -28,7 +24,7 @@ export default function Component() {
                 <Table.Cell>222333444555666</Table.Cell>
                 <Table.Cell>
                   <Link to="/detailtransaksi">
-                    <Button>Buy</Button>
+                    <Button>Detail</Button>
                   </Link>
                 </Table.Cell>
               </Table.Row>
