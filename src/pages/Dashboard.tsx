@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar"
+import Supplier from "../components/TableSupplier"
 import Footer from "../components/Footer"
 
 export default function Dashboard() {
   return (
     <div>
       <Navbar/>
-      <Sidebar/>
+      <Sidebar/> 
+      <Supplier/>
       <div className="flex flex-col items-center justify-center h-screen">
         <h1 className="text-3xl font-bold">Dashboard</h1>
         <p className="mt-2">You are logged in!</p>
