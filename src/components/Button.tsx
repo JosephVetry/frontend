@@ -1,12 +1,17 @@
-
 "use client";
 
+import { Link } from "react-router-dom";
 import { Button } from "flowbite-react";
 
-export default function Component() {
+const AddSupplierButton = () => {
   return (
     <div className="flex flex-wrap gap-2">
-      <Button>Tambah Supplier</Button>
+      <Link to="/addsupplier">
+        <Button>Tambah Supplier</Button>
+      </Link>
     </div>
   );
-}
+};
+
+export default AddSupplierButton;
+

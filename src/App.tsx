@@ -3,6 +3,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Supplier from './pages/Supplier'
 import DetailTable from './pages/DetailTable'
+import AddSupplier from './pages/AddSupplier'
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/supplier" element={<Supplier />} />
+        <Route path="/addsupplier" element={<AddSupplier />} />
         <Route path="/itemdetail" element={<DetailTable />} />
       </Routes>
     </Router>

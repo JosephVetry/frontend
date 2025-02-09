@@ -17,11 +17,6 @@ export default function Component() {
               <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                 <Table.Cell>Paracetamol</Table.Cell>
                 <Table.Cell>5000</Table.Cell>
-                {/* <Table.Cell>
-                  <a href="#" className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
-                    Edit
-                  </a>
-                </Table.Cell> */}
               </Table.Row>
             </Table.Body>
           </Table>
