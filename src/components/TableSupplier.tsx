@@ -15,6 +15,8 @@ interface Supplier {
 
 export default function Component() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     axios.get("https://pharmacy-api-roan.vercel.app/api/supplier")
@@ -26,10 +28,15 @@ export default function Component() {
       });
   }, []);
 
+  // Pagination logic
+  const totalPages = Math.ceil(suppliers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedSuppliers = suppliers.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="flex">
       <main className="flex-1 ml-48 mt-16 p-4">
-      <h2 className="text-2xl font-semibold mb-4"> Supplier</h2>
+        <h2 className="text-2xl font-semibold mb-4">Supplier</h2>
         <div className="overflow-x-auto">
           <div className="flex mb-2">
             <AddButton />
@@ -44,21 +51,39 @@ export default function Component() {
               </Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-              {suppliers.map((supplier) => (
+              {paginatedSuppliers.map((supplier) => (
                 <Table.Row key={supplier._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>{supplier.supplier_name}</Table.Cell>
                   <Table.Cell>{supplier.address}</Table.Cell>
                   <Table.Cell>{supplier.phone_number}</Table.Cell>
                   <Table.Cell>
-                  <Link to={`/detailtransaksi/${supplier._id}`}>
-  <Button>Buy</Button>
-</Link>
-
+                    <Link to={`/detailtransaksi/${supplier._id}`}>
+                      <Button>Buy</Button>
+                    </Link>
                   </Table.Cell>
                 </Table.Row>
               ))}
             </Table.Body>
           </Table>
+
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button 
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-gray-900 dark:text-white">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button 
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </main>
     </div>
