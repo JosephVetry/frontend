@@ -10,7 +10,7 @@ export default function Component() {
       <Sidebar aria-label="Sidebar with logo branding example">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item as={Link} to="/dashboard" icon={HiChartPie}>Dashboard</Sidebar.Item>
+            <Sidebar.Item as={Link} to="/dashboard" icon={HiChartPie}>Barang Farmasi</Sidebar.Item>
             <Sidebar.Item as={Link} to="/supplier" icon={HiUser}>Supplier</Sidebar.Item>
             <Sidebar.Item as={Link} to="/history" icon={HiOutlineClipboardList}>History</Sidebar.Item>
           </Sidebar.ItemGroup>
