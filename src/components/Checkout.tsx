@@ -23,7 +23,6 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  // const [amountPaid, setAmountPaid] = useState<number>(0);
   const [amountPaid, setAmountPaid] = useState<string>("");
   const [message, setMessage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -74,12 +73,19 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!supplierId) {
       setMessage("Supplier ID is missing.");
       return;
     }
-
+  
+    const amountPaidNum = Number(amountPaid);
+  
+    if (amountPaidNum > subtotal) {
+      setMessage(`❌ Amount Paid cannot exceed ${formatRupiah(subtotal)}`);
+      return;
+    }
+  
     const transactionData = {
       id_supplier: supplierId,
       products: cartItems.map((item) => ({
@@ -87,35 +93,33 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
         quantity: item.quantity,
         price_per_unit: item.sellPrice ?? item.price,
       })),
-      // amount_paid: amountPaid,
-      amount_paid: Number(amountPaid),
+      amount_paid: amountPaidNum,
     };
-
+  
     try {
       const response = await fetch("https://pharmacy-api-roan.vercel.app/api/transaction", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(transactionData),
       });
-
+  
       if (!response.ok) {
         throw new Error("Transaction failed");
       }
-
+  
       setShowModal(true);
       setCartItems([]);
       setAmountPaid("0");
-
+  
       setTimeout(() => {
         setShowModal(false);
         navigate("/dashboard");
       }, 2000);
     } catch (err: any) {
-      setMessage(`Error: ${err.message}`);
+      setMessage(`❌ ${err.message}`);
     }
   };
+  
 
   return (
     <section className="mt-16">
@@ -180,36 +184,25 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
     </div>
     
     <input
-      type="number"
-      value={amountPaid}
-      onChange={(e) => setAmountPaid(e.target.value)}
-      required
-      className="border rounded px-2 py-1 w-full"
-    />
+  type="number"
+  value={amountPaid}
+  onChange={(e) => {
+    const value = parseInt(e.target.value) || 0;
+    if (value <= subtotal) {
+      setAmountPaid(e.target.value);
+    }
+  }}
+  required
+  className="border rounded px-2 py-1 w-full"
+/>
 
-    <button type="submit" className="bg-gray-700 px-5 py-3 text-sm text-gray-100 hover:bg-gray-600">
-      Checkout
-    </button>
-    
-    {message && <p className="text-center text-sm text-gray-700 mt-2">{message}</p>}
-  </div>
-</div>
-
-
-            {/* <div className="mt-8 flex justify-end border-t border-gray-100 pt-8">
-              <div className="w-screen max-w-lg space-y-4">
-                <dl className="text-sm text-gray-700">
-                  <div className="flex justify-between">
-                    <dt>Subtotal</dt>
-                    <dd>{formatRupiah(subtotal)}</dd>
-                  </div>
-                </dl>
-                <label className="block text-sm font-medium text-gray-700">Amount Paid</label>
-                <input type="number" value={amountPaid} onChange={(e) => setAmountPaid(e.target.value)} required className="border rounded px-2 py-1 w-full"/>
-                <button type="submit" className="bg-gray-700 px-5 py-3 text-sm text-gray-100 hover:bg-gray-600">Checkout</button>
-                {message && <p className="text-center text-sm text-gray-700 mt-2">{message}</p>}
-              </div>
-            </div> */}
+        <button type="submit" className="bg-gray-700 px-5 py-3 text-sm text-gray-100 hover:bg-gray-600">
+          Checkout
+        </button>
+        
+        {message && <p className="text-center text-sm text-gray-700 mt-2">{message}</p>}
+      </div>
+    </div>
           </form>
         </div>
       </div>
