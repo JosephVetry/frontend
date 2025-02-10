@@ -21,7 +21,7 @@ const RegistrationForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/api/supplier/add-supplier", {
+      const response = await fetch("https://pharmacy-api-roan.vercel.app/api/supplier/add-supplier", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

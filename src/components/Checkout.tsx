@@ -30,7 +30,7 @@ const { supplierId } = useParams<{ supplierId: string }>();
       if (!supplierId) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/supplier/${supplierId}/product`);
+        const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/product`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -88,7 +88,7 @@ const { supplierId } = useParams<{ supplierId: string }>();
     console.log(transactionData);
   
     try {
-      const response = await fetch("http://localhost:3000/api/transaction", {
+      const response = await fetch("https://pharmacy-api-roan.vercel.app/api/transaction", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -17,7 +17,7 @@ export default function Component() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/supplier")
+    axios.get("https://pharmacy-api-roan.vercel.app/api/supplier")
       .then((response) => {
         setSuppliers(response.data);
       })

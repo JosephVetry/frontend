@@ -18,7 +18,7 @@ export default function Component() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/pharmacy_details")
+    axios.get("https://pharmacy-api-roan.vercel.app/api/pharmacy_details")
       .then(response => {
         setProducts(response.data); 
       })

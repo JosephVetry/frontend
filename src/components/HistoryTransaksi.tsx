@@ -21,7 +21,7 @@ export default function TransactionsTable() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/transaction")
+    fetch("https://pharmacy-api-roan.vercel.app/api/transaction")
       .then((response) => response.json())
       .then((data: Transaction[]) => setTransactions(data))
       .catch((error) => console.error("Error fetching transactions:", error));

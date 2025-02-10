@@ -46,7 +46,7 @@ const TransactionDetails = () => {
       if (!transactionId) return;
 
       try {
-        const response = await fetch(`http://localhost:3000/api/transaction/${transactionId}`);
+        const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transactionId}`);
         if (!response.ok) throw new Error("Failed to fetch transaction details");
 
         const data: Transaction = await response.json();
@@ -107,7 +107,7 @@ const TransactionDetails = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/transaction/${transaction._id}/amount-paid`, {
+      const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transaction._id}/amount-paid`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount_paid: newAmountPaid }),
