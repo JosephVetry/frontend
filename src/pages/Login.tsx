@@ -10,7 +10,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  // 🔹 Proteksi agar user yang sudah login tidak bisa kembali ke halaman login
   useEffect(() => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     if (isLoggedIn) {
@@ -20,11 +19,8 @@ export default function Login() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // 🔹 Simpan status login di localStorage
     localStorage.setItem("isLoggedIn", "true");
 
-    // 🔹 Redirect ke dashboard tanpa bisa kembali
     navigate("/dashboard", { replace: true });
   };
 
