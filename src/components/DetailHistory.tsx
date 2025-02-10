@@ -97,36 +97,44 @@ const TransactionDetails = () => {
 
   const handleUpdatePayment = async () => {
     if (!transaction || amountPaid === null) return;
-
-    const newAmountPaid = isNaN(amountPaid) ? 0 : amountPaid; // Prevent NaN
-    if (newAmountPaid < transaction.amount_paid) {
-      setModalMessage("❌ New amount must be greater than the current amount paid.");
+  
+    const newAmountPaid = isNaN(amountPaid) ? 0 : amountPaid;
+    const maxPayment = transaction.total_transaction_price - transaction.amount_paid; // Hitung sisa pembayaran
+  
+    if (newAmountPaid < 1) {
+      setModalMessage("❌ Amount must be at least 1.");
       setIsErrorModal(true);
       setModalVisible(true);
       return;
     }
-
+  
+    if (newAmountPaid > maxPayment) {
+      setModalMessage(`❌ Amount cannot exceed the remaining balance of Rp. ${maxPayment.toLocaleString()}.`);
+      setIsErrorModal(true);
+      setModalVisible(true);
+      return;
+    }
+  
     try {
       const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transaction._id}/amount-paid`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount_paid: newAmountPaid }),
+        body: JSON.stringify({ amount_paid: transaction.amount_paid + newAmountPaid }), // Tambahkan ke jumlah yang sudah dibayar
       });
-
+  
       if (!response.ok) throw new Error("Failed to update amount paid");
-
+  
       const updatedTransaction = await response.json();
-
-      // ✅ Update State Immediately
-      setTransaction((prev) => prev ? { ...prev, amount_paid: newAmountPaid, is_completed: newAmountPaid >= prev.total_transaction_price } : updatedTransaction);
-      setAmountPaid(newAmountPaid);
-
-      // ✅ Success Modal
+  
+      setTransaction((prev) =>
+        prev ? { ...prev, amount_paid: prev.amount_paid + newAmountPaid, is_completed: (prev.amount_paid + newAmountPaid) >= prev.total_transaction_price } : updatedTransaction
+      );
+      setAmountPaid(0); // Reset input setelah update sukses
+  
       setModalMessage("✅ Payment updated successfully!");
       setIsErrorModal(false);
       setModalVisible(true);
-
-      // ✅ Navigate back after showing the modal
+  
       setTimeout(() => {
         setModalVisible(false);
         navigate("/history");
@@ -137,6 +145,8 @@ const TransactionDetails = () => {
       setModalVisible(true);
     }
   };
+  
+  
 
   if (loading) return <p>Loading transaction...</p>;
   if (error) return <p>Error: {error}</p>;
@@ -158,9 +168,17 @@ const TransactionDetails = () => {
           <input
             type="number"
             value={amountPaid ?? ""}
-            onChange={(e) => setAmountPaid(parseInt(e.target.value))}
+            onChange={(e) => {
+              const value = parseInt(e.target.value) || 0;
+              const maxPayment = transaction.total_transaction_price - transaction.amount_paid; // Hitung sisa pembayaran
+
+              if (value <= maxPayment) {
+                setAmountPaid(value);
+              }
+            }}
             className="border p-2 rounded w-full mt-2"
           />
+
           <button
             onClick={handleUpdatePayment}
             className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"

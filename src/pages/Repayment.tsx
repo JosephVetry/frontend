@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
-import History from "../components/HistoryTransaksi";
+import Repayment from "../components/TableRepayment";
 
 export default function HistoryPage() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function HistoryPage() {
     <div>
       <Navbar />
       <Sidebar />
-      <History />
+      <Repayment />
     </div>
   );
 }

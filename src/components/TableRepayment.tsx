@@ -26,8 +26,8 @@ export default function TransactionsTable() {
     fetch("https://pharmacy-api-roan.vercel.app/api/transaction")
       .then((response) => response.json())
       .then((data: Transaction[]) => {
-        // Filter hanya transaksi yang `is_completed: true`
-        const filteredData = data.filter(transaction => transaction.is_completed);
+        // Filter hanya yang `is_completed: false`
+        const filteredData = data.filter(transaction => !transaction.is_completed);
   
         // Urutkan berdasarkan purchase_date (DESCENDING)
         const sortedData = filteredData.sort(
@@ -46,7 +46,7 @@ export default function TransactionsTable() {
   return (
     <div className="flex">
       <main className="flex-1 ml-48 mt-16 p-4">
-        <h2 className="text-2xl font-semibold mb-4">Transactions</h2>
+        <h2 className="text-2xl font-semibold mb-4">All Active Repayment</h2>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
@@ -69,16 +69,12 @@ export default function TransactionsTable() {
                   <Table.Cell className="text-center">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
                   <div className="flex space-x-2">
-  <Link to={`/historydetail/${transaction._id}`} className="w-36">
-    <Button className="w-full h-10 text-sm">Detail</Button>
-  </Link>
-  {!transaction.is_completed && (
-    <Link to={`/historydetail/${transaction._id}`} className="w-36">
-      <Button className="w-full h-10 text-sm whitespace-nowrap">Update Payment</Button>
-    </Link>
-  )}
-</div>
-
+                    {!transaction.is_completed && (
+                        <Link to={`/historydetail/${transaction._id}`} className="w-36">
+                        <Button className="w-full h-10 text-sm whitespace-nowrap">Update Payment</Button>
+                        </Link>
+                    )}
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}
