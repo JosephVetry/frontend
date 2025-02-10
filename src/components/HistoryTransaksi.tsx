@@ -58,9 +58,9 @@ export default function TransactionsTable() {
 </Link>
 
                       {!transaction.is_completed && (
-                        <Link to="/update-payment">
-                          <Button>Update Payment</Button>
-                        </Link>
+                       <Link to={`/historydetail/${transaction._id}`}>
+                       <Button>Update Payment</Button>
+                     </Link>
                       )}
                     </div>
                   </Table.Cell>
