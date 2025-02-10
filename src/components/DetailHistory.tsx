@@ -1,232 +1,3 @@
-// import { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import autoTable from "jspdf-autotable";
-// import jsPDF from "jspdf";
-
-
-// interface Supplier {
-//   _id: string;
-//   supplier_name: string;
-// }
-
-// interface Product {
-//   id_product: string;
-//   quantity: number;
-//   price_per_unit: number;
-//   _id: string;
-//   product_name: string;
-// }
-
-// interface Transaction {
-//   _id: string;
-//   id_supplier: Supplier;
-//   products: Product[];
-//   amount_paid: number;
-//   total_transaction_price: number;
-//   is_completed: boolean;
-//   purchase_date: string;
-//   total_qty: number;
-//   __v: number;
-// }
-
-// const TransactionDetails = () => {
-//   const { transactionId } = useParams();
-//   const navigate = useNavigate();
-
-//   const [transaction, setTransaction] = useState<Transaction | null>(null);
-//   const [loading, setLoading] = useState<boolean>(true);
-//   const [error, setError] = useState<string | null>(null);
-//   const [amountPaid, setAmountPaid] = useState<number | null>(null);
-//   const [modalMessage, setModalMessage] = useState<string | null>(null);
-//   const [modalVisible, setModalVisible] = useState<boolean>(false);
-//   const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
-
-//   useEffect(() => {
-//     const fetchTransaction = async () => {
-//       if (!transactionId) return;
-
-//       try {
-//         const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transactionId}`);
-//         if (!response.ok) throw new Error("Failed to fetch transaction details");
-
-//         const data: Transaction = await response.json();
-//         setTransaction(data);
-//         setAmountPaid(data.amount_paid);
-//       } catch (err: any) {
-//         setError(err.message);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchTransaction();
-//   }, [transactionId]);
-
-//   const handleDownloadPDF = () => {
-//     if (!transaction) return;
-  
-//     const doc = new jsPDF();
-//     doc.setFont("helvetica", "bold");
-//     doc.text("Transaction Details", 14, 20);
-  
-//     // ✅ Add transaction details
-//     doc.setFont("helvetica", "normal");
-//     doc.text(`Supplier: ${transaction.id_supplier.supplier_name}`, 14, 30);
-//     doc.text(`Purchase Date: ${new Date(transaction.purchase_date).toLocaleString()}`, 14, 40);
-//     doc.text(`Total Quantity: ${transaction.total_qty}`, 14, 50);
-//     doc.text(`Total Price: Rp. ${transaction.total_transaction_price.toLocaleString()}`, 14, 60);
-//     doc.text(`Amount Paid: Rp. ${transaction.amount_paid.toLocaleString()}`, 14, 70);
-//     doc.text(`Status: ${transaction.is_completed ? "Completed" : "Pending"}`, 14, 80);
-  
-//     // ✅ Add product table
-//     autoTable(doc, {
-//       startY: 90, // Start after the transaction details
-//       head: [["Product Name", "Quantity", "Price per Unit", "Total"]],
-//       body: transaction.products.map(product => [
-//         product.product_name,
-//         product.quantity,
-//         `Rp. ${product.price_per_unit.toLocaleString()}`,
-//         `Rp. ${(product.quantity * product.price_per_unit).toLocaleString()}`
-//       ]),
-//     });
-  
-//     // ✅ Save the PDF
-//     doc.save("transaction_details.pdf");
-//   };
-  
-
-//   const handleUpdatePayment = async () => {
-//     if (!transaction || amountPaid === null) return;
-
-//     const newAmountPaid = isNaN(amountPaid) ? 0 : amountPaid; // Prevent NaN
-//     if (newAmountPaid < transaction.amount_paid) {
-//       setModalMessage("❌ New amount must be greater than the current amount paid.");
-//       setIsErrorModal(true);
-//       setModalVisible(true);
-//       return;
-//     }
-
-//     try {
-//       const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transaction._id}/amount-paid`, {
-//         method: "PUT",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ amount_paid: newAmountPaid }),
-//       });
-
-//       if (!response.ok) throw new Error("Failed to update amount paid");
-
-//       const updatedTransaction = await response.json();
-
-//       // ✅ Update State Immediately
-//       setTransaction((prev) => prev ? { ...prev, amount_paid: newAmountPaid, is_completed: newAmountPaid >= prev.total_transaction_price } : updatedTransaction);
-//       setAmountPaid(newAmountPaid);
-
-//       // ✅ Success Modal
-//       setModalMessage("✅ Payment updated successfully!");
-//       setIsErrorModal(false);
-//       setModalVisible(true);
-
-//       // ✅ Navigate back after showing the modal
-//       setTimeout(() => {
-//         setModalVisible(false);
-//         navigate("/history");
-//       }, 2000);
-//     } catch (err: any) {
-//       setModalMessage("❌ " + err.message);
-//       setIsErrorModal(true);
-//       setModalVisible(true);
-//     }
-//   };
-
-//   if (loading) return <p>Loading transaction...</p>;
-//   if (error) return <p>Error: {error}</p>;
-//   if (!transaction) return <p>No transaction found.</p>;
-
-//   return (
-//     <div className="max-w-4xl mx-auto mt-16 p-6 bg-white shadow-lg rounded-lg">
-//       <h1 className="text-2xl font-bold mb-4">Transaction Details</h1>
-//       <p><strong>Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
-//       <p><strong>Purchase Date:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
-//       <p><strong>Total Quantity:</strong> {transaction.total_qty}</p>
-//       <p><strong>Total Price:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p>
-
-//       {transaction.is_completed ? (
-//         <p><strong>Amount Paid:</strong> Rp. {transaction.amount_paid.toLocaleString()}</p>
-//       ) : (
-//         <div className="mt-4">
-//           <label className="block font-semibold">Amount Paid:</label>
-//           <input
-//             type="number"
-//             value={amountPaid ?? ""}
-//             onChange={(e) => setAmountPaid(parseInt(e.target.value))}
-//             className="border p-2 rounded w-full mt-2"
-//           />
-//           <button
-//             onClick={handleUpdatePayment}
-//             className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-//           >
-//             Update Payment
-//           </button>
-//         </div>
-//       )}
-
-//       <p><strong>Status:</strong> {transaction.is_completed ? "Completed" : "Pending"}</p>
-
-//       <h2 className="text-xl font-bold mt-6">Products</h2>
-//       <table className="w-full mt-4 border-collapse border border-gray-300">
-//         <thead>
-//           <tr className="bg-gray-100">
-//             <th className="border border-gray-300 px-4 py-2 text-left">Product Name</th>
-//             <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
-//             <th className="border border-gray-300 px-4 py-2 text-center">Price per Unit</th>
-//             <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {transaction.products.length > 0 ? transaction.products.map((product) => (
-//             <tr key={product._id} className="border-b border-gray-300">
-//               <td className="border border-gray-300 px-4 py-2">{product.product_name}</td>
-//               <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity}</td>
-//               <td className="border border-gray-300 px-4 py-2 text-center">Rp. {product.price_per_unit.toLocaleString()}</td>
-//               <td className="border border-gray-300 px-4 py-2 text-center">Rp. {(product.quantity * product.price_per_unit).toLocaleString()}</td>
-//             </tr>
-//           )) : (
-//             <tr>
-//               <td colSpan={4} className="text-center py-4">No products found.</td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </table>
-
-//       <div className="space-x-4">
-
-// {/* ✅ Back Button */}
-// <button onClick={() => navigate("/history")} className="mt-6 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700">
-//         Back to History
-//       </button>
-
-//   {transaction.is_completed && (
-//         <button 
-//           onClick={handleDownloadPDF} 
-//           className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
-//         >
-//           Download PDF
-//         </button>
-//       )}
-
-// </div>
-
-//       {/* ✅ Modal for success or error */}
-//       {modalVisible && (
-//         <div className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg ${isErrorModal ? "bg-red-500" : "bg-green-500"} text-white`}>
-//           {modalMessage}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default TransactionDetails;
 
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -236,6 +7,7 @@ import jsPDF from "jspdf";
 interface Supplier {
   _id: string;
   supplier_name: string;
+  address: string;
 }
 
 interface Product {
@@ -251,6 +23,7 @@ interface Transaction {
   id_supplier: Supplier;
   products: Product[];
   amount_paid: number;
+  amount_paid_history: { amount: number; date: string }[];
   total_transaction_price: number;
   is_completed: boolean;
   purchase_date: string;
@@ -291,6 +64,96 @@ const TransactionDetails = () => {
     fetchTransaction();
   }, [transactionId]);
 
+  const handleDownloadPDF = () => {
+    if (!transaction) return;
+  
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16); // Set font size to 12
+    doc.text("FAKTUR PEMBELIAN", 120, 15);
+  
+    // ✅ Add transaction details side by side (Supplier | No Faktur) and (Alamat | Tgl)
+    doc.setFont("helvetica", "normal");
+    
+    const supplierText = `Supplier    : ${transaction.id_supplier.supplier_name}`;
+    const alamatText = `Alamat      : ${transaction.id_supplier.address}`; // Replace with actual address field if available
+    const noFakturText = `No Faktur       : ${transaction._id}`;
+    const tglText = `Tanggal          : ${new Date(transaction.purchase_date).toLocaleDateString()}`;
+  
+    // First row (Supplier side by side with No Faktur)
+    doc.setFontSize(12); // Set font size to 12
+    doc.text(supplierText, 14, 30);
+    doc.text(noFakturText, 120, 30);  // Adjust the X position as needed
+  
+    // Second row (Alamat side by side with Tgl)
+    doc.text(alamatText, 14, 40);
+    doc.text(tglText, 120, 40); // Adjust the X position as needed
+  
+    // ✅ Add product table
+// Calculate the subtotal
+const subtotal = transaction.products.reduce((sum, product) => {
+  return sum + (product.quantity * product.price_per_unit);
+}, 0);
+
+// Generate the table with borders but no background color
+autoTable(doc, {
+  startY: 50, // Start after the transaction details
+  head: [["Nama Barang", "Qty", "Harga Satuan", "Total"]],
+  body: [
+    ...transaction.products.map(product => [
+      product.product_name,
+      product.quantity,
+      `Rp. ${product.price_per_unit.toLocaleString()}`,
+      `Rp. ${(product.quantity * product.price_per_unit).toLocaleString()}`
+    ]),
+    // Adding subtotal row with no background color
+    [
+      '', // Empty column
+      '', // Empty column
+      'Subtotal', // Subtotal label
+      `Rp. ${subtotal.toLocaleString()}` // Subtotal value
+    ]
+  ],
+  theme: 'grid', // Use a grid theme for cleaner look
+  headStyles: {
+    fillColor: [255, 255, 255], // No background color for header (white)
+    textColor: [0, 0, 0], // Black text color
+    fontStyle: 'bold', // Bold font for header text
+    halign: 'center', // Center the header text
+    valign: 'middle', // Vertically align the header text
+  },
+  bodyStyles: {
+    fontSize: 10, // Smaller font size for table body
+    valign: 'middle', // Vertically align the body text
+    cellPadding: 5, // Add padding for cells
+  },
+  columnStyles: {
+    0: { cellWidth: 'auto', halign: 'center' }, // Column 1 styles
+    1: { cellWidth: 'auto', halign: 'center' }, // Column 2 styles
+    2: { cellWidth: 'auto', halign: 'center' }, // Column 3 styles
+    3: { cellWidth: 'auto', halign: 'center' }, // Column 4 styles
+  },
+  styles: {
+    cellWidth: 'auto', // Auto-adjust cell width based on content
+    overflow: 'linebreak', // Allow text to wrap in cells
+    halign: 'center', // Center align text in cells
+    valign: 'middle', // Vertically align text in cells
+    font: 'helvetica', // Use Helvetica font
+    fontSize: 10, // Set font size
+    fillColor: [255, 255, 255], // No background color for cells
+    lineWidth: 0.1, // Border line width
+    lineColor: [0, 0, 0], // Border line color (black)
+  }
+});
+
+// ✅ Save the PDF
+doc.save("transaction_details.pdf");
+
+  };
+  
+  
+
+
   const handleUpdatePayment = async () => {
     if (!transaction || amountPaid === null) return;
 
@@ -301,6 +164,8 @@ const TransactionDetails = () => {
       setModalVisible(true);
       return;
     }
+
+    
 
     try {
       const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transaction._id}/amount-paid`, {
@@ -336,65 +201,167 @@ const TransactionDetails = () => {
   if (!transaction) return <p>No transaction found.</p>;
 
   return (
-    <div className="max-w-4xl mx-auto mt-16 p-6 bg-white shadow-lg rounded-lg">
+    <div className="max-w-4xl mx-auto mt-16 p-12 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Transaction Details</h1>
       <p><strong>Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
       <p><strong>Purchase Date:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
       <p><strong>Total Quantity:</strong> {transaction.total_qty}</p>
       <p><strong>Total Price:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p>
+      <p><strong>Status:</strong> {transaction.is_completed ? "Completed" : "Pending"}</p>
 
-      <h2 className="text-xl font-bold mt-6">Products</h2>
-      <table className="w-full mt-4 border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-100">
-            <th className="border border-gray-300 px-4 py-2 text-left">Product Name</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">Price per Unit</th>
-            <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {transaction.products.length > 0 ? transaction.products.map((product) => (
-            <tr key={product._id} className="border-b border-gray-300">
-              <td className="border border-gray-300 px-4 py-2">{product.product_name}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">Rp. {product.price_per_unit.toLocaleString()}</td>
-              <td className="border border-gray-300 px-4 py-2 text-center">Rp. {(product.quantity * product.price_per_unit).toLocaleString()}</td>
-            </tr>
-          )) : (
-            <tr>
-              <td colSpan={4} className="text-center py-4">No products found.</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+    
 
-      {!transaction.is_completed && (
-        <div className="mt-4">
-          <label className="block font-semibold">Amount Paid:</label>
-          <input
-            type="number"
-            value={amountPaid ?? ""}
-            onChange={(e) => {
-              const inputAmount = parseInt(e.target.value, 10);
-              setAmountPaid(isNaN(inputAmount) ? 0 : Math.min(inputAmount, transaction.total_transaction_price - transaction.amount_paid));
-            }}
-            className="border p-2 rounded w-full mt-2"
-          />
-          <button
-            onClick={handleUpdatePayment}
-            className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-          >
-            Update Payment
-          </button>
-        </div>
-      )}
+<h2 className="text-xl font-bold mt-6">Products</h2>
+<table className="w-full mt-4 border-collapse border border-gray-300">
+  <thead>
+    <tr className="bg-gray-100">
+      <th className="border border-gray-300 px-4 py-2 text-left">Product Name</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Price per Unit</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    {transaction.products.length > 0 ? transaction.products.map((product) => (
+      <tr key={product._id} className="border-b border-gray-300">
+        <td className="border border-gray-300 px-4 py-2">{product.product_name}</td>
+        <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity}</td>
+        <td className="border border-gray-300 px-4 py-2 text-center">Rp. {product.price_per_unit.toLocaleString()}</td>
+        <td className="border border-gray-300 px-4 py-2 text-center">Rp. {(product.quantity * product.price_per_unit).toLocaleString()}</td>
+      </tr>
+    )) : (
+      <tr>
+        <td colSpan={4} className="text-center py-4">No products found.</td>
+      </tr>
+    )}
+  </tbody>
+</table>
 
-      {modalVisible && (
-        <div className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg ${isErrorModal ? "bg-red-500" : "bg-green-500"} text-white`}>
-          {modalMessage}
-        </div>
-      )}
+<h2 className="text-xl font-bold mt-6">Amount Paid History</h2>
+<table className="w-full mt-4 border-collapse border border-gray-300">
+<thead>
+<tr className="bg-gray-100">
+<th className="border border-gray-300 px-4 py-2 text-center">Date</th>
+<th className="border border-gray-300 px-4 py-2 text-center">Amount</th>
+</tr>
+</thead>
+<tbody>
+{transaction.amount_paid_history.length > 0 ? (
+<>
+  {transaction.amount_paid_history.map((payment, index) => (
+    <tr key={index} className="border-b border-gray-300">
+      <td className="border border-gray-300 px-4 py-2 text-center">
+        {new Date(payment.date).toLocaleDateString()}
+      </td>
+      <td className="border border-gray-300 px-4 py-2 text-center">
+        Rp. {payment.amount.toLocaleString()}
+      </td>
+    </tr>
+  ))}
+  <tr className="bg-gray-200 font-bold">
+    <td className="border border-gray-300 px-4 py-2 text-center">Total Amount Paid</td>
+    <td className="border border-gray-300 px-4 py-2 text-center">
+      Rp. {transaction.amount_paid_history.reduce((sum, payment) => sum + payment.amount, 0).toLocaleString()}
+    </td>
+  </tr>
+</>
+) : (
+<tr>
+  <td colSpan={2} className="text-center py-4">No payment history found.</td>
+</tr>
+)}
+</tbody>
+</table>
+
+<div className="space-x-4">
+
+{transaction.is_completed ? (
+  <div className="flex justify-between space-x-4"> 
+    {/* ✅ Back Button */}
+    <button 
+      onClick={() => navigate("/history")} 
+      className="mt-3 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+    >
+      Back to History
+    </button>
+
+    <button 
+      onClick={handleDownloadPDF} 
+      className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+    >
+      Download Products PDF
+    </button>
+
+    <button 
+      onClick={handleDownloadPDF} 
+      className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+    >
+      Download Amount Paid History PDF
+    </button>
+  </div>
+) : (
+
+  <div> 
+<div className="mt-4">
+    <label className="block font-semibold">Enter Payment Amount:</label>
+    <input
+      type="text" // Change type to "text" to allow formatted display
+      value={amountPaid === 0 ? "" : `Rp. ${amountPaid?.toLocaleString("id-ID") ?? ""}`}
+
+
+      onChange={(e) => {
+        // Remove non-numeric characters (dots, spaces, etc.)
+        const rawValue = e.target.value.replace(/\D/g, ""); 
+        const inputAmount = parseInt(rawValue, 10);
+        setAmountPaid(isNaN(inputAmount) ? 0 : Math.min(inputAmount, transaction.total_transaction_price - transaction.amount_paid));
+      }}
+      placeholder="Rp. 0"
+      className="border p-2 rounded w-full mt-2"
+    />
+   
+  </div>
+  <div className="flex justify-between space-x-4"> {/* Add space between the buttons */}
+
+  <button 
+    onClick={() => navigate("/repayment")} 
+    className="mt-3 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+  >
+    Back to Repayment
+  </button>
+
+  <button
+    onClick={handleUpdatePayment}
+    className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+  >
+    Update Payment
+  </button>
+</div>
+
+  </div>
+)}
+
+
+
+</div>
+
+{modalVisible && (
+  <div className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg ${isErrorModal ? "bg-red-500" : "bg-green-500"} text-white`}>
+    {modalMessage}
+  </div>
+)}
+
+
+
+
+
+
+{/* ✅ Modal for success or error */}
+{modalVisible && (
+  <div className={`fixed bottom-5 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg ${isErrorModal ? "bg-red-500" : "bg-green-500"} text-white`}>
+    {modalMessage}
+  </div>
+)}
+
     </div>
   );
 };

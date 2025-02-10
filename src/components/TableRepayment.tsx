@@ -68,14 +68,13 @@ export default function TransactionsTable() {
                   <Table.Cell className="text-center">{transaction.is_completed ? "Completed" : "Not Fully Paid"}</Table.Cell>
                   <Table.Cell className="text-center">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
-                  <div className="flex space-x-2">
-
-                {!transaction.is_completed && (
-                    <Link to={`/historydetail/${transaction._id}`} className="w-36">
-                    <Button className="w-full h-10 text-sm whitespace-nowrap">Update Payment</Button>
-                    </Link>
-                )}
-                </div>
+                  <div className=" flex justify-center items-center">
+  {!transaction.is_completed && (
+    <Link to={`/historydetail/${transaction._id}`} className="w-36">
+      <Button className="w-full h-10 text-sm whitespace-nowrap">Update Payment</Button>
+    </Link>
+  )}
+</div>
                   </Table.Cell>
                 </Table.Row>
               ))}

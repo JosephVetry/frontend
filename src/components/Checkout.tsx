@@ -23,7 +23,7 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [amountPaid, setAmountPaid] = useState<string>("");
+  const [amountPaid, setAmountPaid] = useState<number>(0);
   const [message, setMessage] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -109,7 +109,7 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
   
       setShowModal(true);
       setCartItems([]);
-      setAmountPaid("0");
+      setAmountPaid(0);
   
       setTimeout(() => {
         setShowModal(false);
@@ -176,25 +176,26 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
     </dl>
     
     {/* Amount Paid dengan tampilan format Rupiah */}
-    <div className="flex justify-between items-center">
-      <label className="block text-sm font-medium text-gray-700">Amount Paid</label>
-      <span className="text-gray-700 font-semibold">
-        {formatRupiah(Number(amountPaid) || 0)}
-      </span>
-    </div>
-    
     <input
-  type="number"
-  value={amountPaid}
+  type="text" // Change type to "text" to allow formatted display
+  value={amountPaid === 0 ? "" : `Rp. ${amountPaid?.toLocaleString("id-ID") ?? ""}`}
   onChange={(e) => {
-    const value = parseInt(e.target.value) || 0;
-    if (value <= subtotal) {
-      setAmountPaid(e.target.value);
-    }
+    // Remove non-numeric characters (dots, spaces, etc.)
+    const rawValue = e.target.value.replace(/\D/g, "");
+    const inputAmount = parseInt(rawValue, 10);
+
+
+    // Ensure the input amount is valid and doesn't exceed the remaining balance
+    const newAmount = isNaN(inputAmount) ? 0 : Math.min(inputAmount, subtotal);
+
+    setAmountPaid(newAmount);
   }}
-  required
-  className="border rounded px-2 py-1 w-full"
+  placeholder="Rp. 0"
+  className="border p-2 rounded w-full mt-2"
 />
+
+
+
 
         <button type="submit" className="bg-gray-700 px-5 py-3 text-sm text-gray-100 hover:bg-gray-600">
           Checkout

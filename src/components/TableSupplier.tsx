@@ -46,6 +46,7 @@ export default function Component() {
               <Table.HeadCell>Supplier Name</Table.HeadCell>
               <Table.HeadCell>Address</Table.HeadCell>
               <Table.HeadCell>Phone Number</Table.HeadCell>
+              <Table.HeadCell>Other</Table.HeadCell>
               <Table.HeadCell>
                 <span className="sr-only">Buy</span>
               </Table.HeadCell>
