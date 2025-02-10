@@ -15,7 +15,7 @@ interface Product {
 export default function Component() {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 6;
 
   useEffect(() => {
     axios.get("https://pharmacy-api-roan.vercel.app/api/pharmacy_details")

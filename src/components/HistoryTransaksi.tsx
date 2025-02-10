@@ -19,6 +19,8 @@ interface Transaction {
 
 export default function TransactionsTable() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
     fetch("https://pharmacy-api-roan.vercel.app/api/transaction")
@@ -26,6 +28,10 @@ export default function TransactionsTable() {
       .then((data: Transaction[]) => setTransactions(data))
       .catch((error) => console.error("Error fetching transactions:", error));
   }, []);
+
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedTransactions = transactions.slice(startIndex, startIndex + itemsPerPage);
 
   return (
     <div className="flex">
@@ -43,7 +49,7 @@ export default function TransactionsTable() {
               <Table.HeadCell>Other</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
-              {transactions.map((transaction) => (
+              {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>{transaction.id_supplier.supplier_name}</Table.Cell>
                   <Table.Cell>{transaction.total_qty}</Table.Cell>
@@ -53,14 +59,13 @@ export default function TransactionsTable() {
                   <Table.Cell>{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
                     <div className="flex space-x-2">
-                    <Link to={`/historydetail/${transaction._id}`}>
-  <Button>Detail</Button>
-</Link>
-
+                      <Link to={`/historydetail/${transaction._id}`}>
+                        <Button>Detail</Button>
+                      </Link>
                       {!transaction.is_completed && (
-                       <Link to={`/historydetail/${transaction._id}`}>
-                       <Button>Update Payment</Button>
-                     </Link>
+                        <Link to={`/historydetail/${transaction._id}`}>
+                          <Button>Update Payment</Button>
+                        </Link>
                       )}
                     </div>
                   </Table.Cell>
@@ -68,6 +73,24 @@ export default function TransactionsTable() {
               ))}
             </Table.Body>
           </Table>
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button 
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
+              disabled={currentPage === 1}
+            >
+              Previous
+            </Button>
+            <span className="text-gray-900 dark:text-white">
+              Page {currentPage} of {totalPages}
+            </span>
+            <Button 
+              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </main>
     </div>
