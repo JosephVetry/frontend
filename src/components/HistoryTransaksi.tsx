@@ -144,23 +144,23 @@ export default function TransactionsTable() {
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
-              <Table.HeadCell>Supplier Name</Table.HeadCell>
-              <Table.HeadCell>Total Quantity</Table.HeadCell>
-              <Table.HeadCell>Total Transaction Price</Table.HeadCell>
-              <Table.HeadCell>Amount Paid</Table.HeadCell>
-              <Table.HeadCell>Status</Table.HeadCell>
-              <Table.HeadCell>Purchase Date</Table.HeadCell>
-              <Table.HeadCell>Other</Table.HeadCell>
+              <Table.HeadCell className="text-center">Supplier Name</Table.HeadCell>
+              <Table.HeadCell className="text-center">Total Quantity</Table.HeadCell>
+              <Table.HeadCell className="text-center">Total Transaction Price</Table.HeadCell>
+              <Table.HeadCell className="text-center">Amount Paid</Table.HeadCell>
+              <Table.HeadCell className="text-center">Status</Table.HeadCell>
+              <Table.HeadCell className="text-center">Purchase Date</Table.HeadCell>
+              <Table.HeadCell className="text-center">Other</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell>{transaction.id_supplier.supplier_name}</Table.Cell>
-                  <Table.Cell>{transaction.total_qty}</Table.Cell>
-                  <Table.Cell>Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
-                  <Table.Cell>Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
-                  <Table.Cell>{transaction.is_completed ? "Completed" : "Not Fully Paid"}</Table.Cell>
-                  <Table.Cell>{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
+                  <Table.Cell className="text-center">{transaction.id_supplier.supplier_name}</Table.Cell>
+                  <Table.Cell className="text-center">{transaction.total_qty}</Table.Cell>
+                  <Table.Cell className="text-center">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
+                  <Table.Cell className="text-center">Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
+                  <Table.Cell className="text-center">{transaction.is_completed ? "Completed" : "Not Fully Paid"}</Table.Cell>
+                  <Table.Cell className="text-center">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
                   <div className="flex space-x-2">
   <Link to={`/historydetail/${transaction._id}`} className="w-36">
