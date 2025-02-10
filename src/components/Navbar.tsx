@@ -16,8 +16,11 @@ export default function NavbarComponent() {
         </span>
       </Navbar.Brand>
       <div className="flex md:order-2">
-        <Button onClick={() => navigate("/login")}>Logout</Button>
-
+        <Button onClick={() => {
+            localStorage.removeItem("isLoggedIn")
+            navigate("/", { replace: true })
+          }}>Logout
+          </Button>
         <Navbar.Toggle />
       </div>
     </Navbar>

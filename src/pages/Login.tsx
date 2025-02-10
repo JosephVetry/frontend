@@ -1,23 +1,36 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, Label, TextInput, Button } from "flowbite-react";
-import Navbar from "../components/NavbarLuar"
-import Footer from "../components/Footer"
-
+import Navbar from "../components/NavbarLuar";
+import Footer from "../components/Footer";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+  // 🔹 Proteksi agar user yang sudah login tidak bisa kembali ke halaman login
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (isLoggedIn) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    navigate("/dashboard");
+
+    // 🔹 Simpan status login di localStorage
+    localStorage.setItem("isLoggedIn", "true");
+
+    // 🔹 Redirect ke dashboard tanpa bisa kembali
+    navigate("/dashboard", { replace: true });
   };
+
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <div className="flex justify-center items-center min-h-screen bg-gray-300">
         <Card className="max-w-sm w-full">
           <form className="flex flex-col gap-4 p-4" onSubmit={handleSubmit}>
@@ -53,9 +66,7 @@ export default function Login() {
           </form>
         </Card>
       </div>
-      <Footer/>
+      <Footer />
     </div>
-
   );
 }
-
