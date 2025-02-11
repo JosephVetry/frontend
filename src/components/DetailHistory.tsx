@@ -18,6 +18,8 @@ interface Product {
   product_name: string;
 }
 
+
+
 interface Transaction {
   _id: string;
   id_supplier: Supplier;
@@ -187,15 +189,12 @@ doc.save("transaction_details.pdf");
     } else {
       // ✅ Generate Payment History Table
       autoTable(doc, {
-        
         startY: nextY,
         head: [["Tanggal Bayar", "Jumlah Pembayaran"]],
-        body: [
-          ...paymentHistory.map(payment => [
-            new Date(payment.date).toLocaleDateString(),
-            `Rp. ${payment.amount.toLocaleString()}`
-          ])
-        ],
+        body: paymentHistory.map(payment => [
+          new Date(payment.date).toLocaleDateString(),
+          `Rp. ${payment.amount.toLocaleString()}`
+        ]),
         theme: "grid",
         headStyles: {
           fillColor: [230, 230, 230], // Light gray header
@@ -224,13 +223,12 @@ doc.save("transaction_details.pdf");
         },
       });
   
-      nextY = doc.autoTable.previous.finalY + 10; // Get the last position of the table and move below it
+      nextY = (doc as any).lastAutoTable?.finalY + 10 || 50; // ✅ Corrected
   
       // ✅ Display Total Bayar (Total Amount Due) and Remaining Balance
-      doc.text(`Jumlah Pembayaran                 : Rp. ${totalPaid.toLocaleString()}`, 100, nextY );
-      doc.text(`Total yang harus dibayar          : Rp. ${totalBayar.toLocaleString()}`, 100, nextY +7);
+      doc.text(`Jumlah Pembayaran                 : Rp. ${totalPaid.toLocaleString()}`, 100, nextY);
+      doc.text(`Total yang harus dibayar          : Rp. ${totalBayar.toLocaleString()}`, 100, nextY + 7);
       doc.text(`Sisa Pembayaran                   : Rp. ${remainingBalance.toLocaleString()}`, 100, nextY + 14);
-
     }
   
     // ✅ Save the PDF
