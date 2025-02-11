@@ -74,7 +74,7 @@ const TransactionDetails = () => {
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16); // Set font size to 12
-    doc.text("FAKTUR PEMBAYARAN", 120, 15);
+    doc.text("FAKTUR PEMBELIAN", 120, 15);
   
     // ✅ Add transaction details side by side (Supplier | No Faktur) and (Alamat | Tgl)
     doc.setFont("helvetica", "normal");
@@ -161,7 +161,7 @@ doc.save("transaction_details.pdf");
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text("FAKTUR PEMBELIAN", 105, 15, { align: "center" });
+    doc.text("FAKTUR PEMBAYARAN", 105, 15, { align: "center" });
   
     // ✅ Transaction details (Supplier | No Faktur) and (Alamat | Tgl)
     doc.setFont("helvetica", "normal");
