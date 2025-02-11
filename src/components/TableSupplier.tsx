@@ -46,10 +46,8 @@ export default function Component() {
               <Table.HeadCell>Supplier Name</Table.HeadCell>
               <Table.HeadCell>Address</Table.HeadCell>
               <Table.HeadCell>Phone Number</Table.HeadCell>
-              <Table.HeadCell>Other</Table.HeadCell>
-              <Table.HeadCell>
-                <span className="sr-only">Buy</span>
-              </Table.HeadCell>
+              <Table.HeadCell >Other</Table.HeadCell>
+           
             </Table.Head>
             <Table.Body className="divide-y">
               {paginatedSuppliers.map((supplier) => (
@@ -57,11 +55,32 @@ export default function Component() {
                   <Table.Cell>{supplier.supplier_name}</Table.Cell>
                   <Table.Cell>{supplier.address}</Table.Cell>
                   <Table.Cell>{supplier.phone_number}</Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/detailtransaksi/${supplier._id}`}>
-                      <Button>Buy</Button>
-                    </Link>
-                  </Table.Cell>
+                  <Table.Cell >
+  <Link className="flex items-center" to={`/detailtransaksi/${supplier._id}`}>
+  <Button>
+     <div className="flex items-center gap-2">
+     <svg 
+        xmlns="http://www.w3.org/2000/svg" 
+        width="18" 
+        height="18" 
+        viewBox="0 0 24 24" 
+        fill="none" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
+        strokeLinejoin="round"
+      >
+        <circle cx="8" cy="21" r="1"/>
+        <circle cx="19" cy="21" r="1"/>
+        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+      </svg>
+      <span>Buy</span>
+     </div>
+    </Button>
+  </Link>
+</Table.Cell>
+
+
                 </Table.Row>
               ))}
             </Table.Body>

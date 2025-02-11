@@ -153,12 +153,30 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
                   <tr key={item._id} className="border-b border-gray-300">
                     <td className="border border-gray-300 px-4 py-2">{item.name}</td>
                     <td className="border border-gray-300 px-4 py-2 text-center">{formatRupiah(item.price)}</td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">
-                      <button type="button" onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))}>−</button>
-                      <span className="mx-2">{item.quantity}</span>
-                      <button type="button" onClick={() => updateQuantity(item._id, item.quantity + 1)}>+</button>
-                    </td>
-                    <td className="border border-gray-300 px-4 py-2 text-center">{formatRupiah(item.price * item.quantity)}</td>
+                    <td className="border border-gray-300 px-4 py-2 text-center whitespace-nowrap">
+  <button 
+    type="button" 
+    onClick={() => updateQuantity(item._id, Math.max(1, item.quantity - 1))} 
+    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-l hover:bg-gray-300"
+  >
+    −
+  </button>
+  <span className="mx-3 text-lg font-medium inline-block w-10 text-center">
+    {item.quantity}
+  </span>
+  <button 
+    type="button" 
+    onClick={() => updateQuantity(item._id, item.quantity + 1)} 
+    className="px-3 py-1 bg-gray-200 text-gray-700 rounded-r hover:bg-gray-300"
+  >
+    +
+  </button>
+</td>
+
+<td className="border border-gray-300 px-4 py-2 text-center w-36 whitespace-nowrap">
+  {formatRupiah(item.price * item.quantity)}
+</td>
+
                     <td className="border border-gray-300 px-4 py-2 text-center">
                       <button type="button" onClick={() => removeItem(item._id)}>🗑️</button>
                     </td>

@@ -5,9 +5,9 @@ import { Button } from "flowbite-react";
 
 const AddSupplierButton = () => {
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="mb-5 flex flex-wrap gap-2">
       <Link to="/addsupplier">
-        <Button>Add Supplier</Button>
+        <Button> Add Supplier</Button>
       </Link>
     </div>
   );
