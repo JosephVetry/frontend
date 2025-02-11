@@ -46,12 +46,14 @@ const TransactionDetails = () => {
   useEffect(() => {
     const fetchTransaction = async () => {
       if (!transactionId) return;
-
+      
       try {
         const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transactionId}`);
         if (!response.ok) throw new Error("Failed to fetch transaction details");
+     
 
         const data: Transaction = await response.json();
+      
         setTransaction(data);
         setAmountPaid(data.amount_paid);
       } catch (err: any) {
@@ -64,7 +66,7 @@ const TransactionDetails = () => {
     fetchTransaction();
   }, [transactionId]);
 
-  const handleDownloadPDF = () => {
+  const handleDownloadProductPDF = () => {
     if (!transaction) return;
   
     const doc = new jsPDF();
@@ -150,6 +152,91 @@ autoTable(doc, {
 doc.save("transaction_details.pdf");
 
   };
+  
+  const handleDownloadPaymentPDF = () => {
+    if (!transaction) return;
+  
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("FAKTUR PEMBELIAN", 105, 15, { align: "center" });
+  
+    // ✅ Transaction details (Supplier | No Faktur) and (Alamat | Tgl)
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+  
+    const supplierText = `Supplier    : ${transaction.id_supplier.supplier_name}`;
+    const alamatText = `Alamat      : ${transaction.id_supplier.address}`;
+    const noFakturText = `No Faktur   : ${transaction._id}`;
+    const tglText = `Tanggal     : ${new Date(transaction.purchase_date).toLocaleDateString()}`;
+  
+    doc.text(supplierText, 14, 30);
+    doc.text(noFakturText, 120, 30);
+    doc.text(alamatText, 14, 40);
+    doc.text(tglText, 120, 40);
+  
+    const paymentHistory = transaction.amount_paid_history;
+    const totalBayar = transaction.total_transaction_price; // Total amount to be paid
+    const totalPaid = paymentHistory.reduce((sum, payment) => sum + payment.amount, 0); // Total amount paid
+    const remainingBalance = totalBayar - totalPaid; // Remaining amount to be paid
+  
+    let nextY = 50;
+  
+    if (paymentHistory.length === 0) {
+      doc.text("No payment history found.", 14, nextY);
+    } else {
+      // ✅ Generate Payment History Table
+      autoTable(doc, {
+        
+        startY: nextY,
+        head: [["Tanggal Bayar", "Jumlah Pembayaran"]],
+        body: [
+          ...paymentHistory.map(payment => [
+            new Date(payment.date).toLocaleDateString(),
+            `Rp. ${payment.amount.toLocaleString()}`
+          ])
+        ],
+        theme: "grid",
+        headStyles: {
+          fillColor: [230, 230, 230], // Light gray header
+          textColor: [0, 0, 0],
+          fontStyle: "bold",
+          halign: "center",
+        },
+        bodyStyles: {
+          fontSize: 10,
+          valign: "middle",
+          cellPadding: 5,
+        },
+        columnStyles: {
+          0: { cellWidth: "auto", halign: "center" },
+          1: { cellWidth: "auto", halign: "right" },
+        },
+        styles: {
+          cellWidth: "auto",
+          overflow: "linebreak",
+          halign: "center",
+          valign: "middle",
+          font: "helvetica",
+          fontSize: 10,
+          lineWidth: 0.1,
+          lineColor: [0, 0, 0],
+        },
+      });
+  
+      nextY = doc.autoTable.previous.finalY + 10; // Get the last position of the table and move below it
+  
+      // ✅ Display Total Bayar (Total Amount Due) and Remaining Balance
+      doc.text(`Jumlah Pembayaran                 : Rp. ${totalPaid.toLocaleString()}`, 100, nextY );
+      doc.text(`Total yang harus dibayar          : Rp. ${totalBayar.toLocaleString()}`, 100, nextY +7);
+      doc.text(`Sisa Pembayaran                   : Rp. ${remainingBalance.toLocaleString()}`, 100, nextY + 14);
+
+    }
+  
+    // ✅ Save the PDF
+    doc.save("payment_history.pdf");
+  };
+  
   
   
 
@@ -289,7 +376,7 @@ doc.save("transaction_details.pdf");
 
   <div className="space-x-2 flex"> 
     <button 
-      onClick={handleDownloadPDF} 
+      onClick={handleDownloadProductPDF} 
         className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 flex items-center space-x-2"
     >
       <svg 
@@ -309,9 +396,9 @@ doc.save("transaction_details.pdf");
       </svg>
       <span>Products PDF</span>
     </button>
-
+    
     <button 
-      onClick={handleDownloadPDF} 
+      onClick={handleDownloadPaymentPDF} 
       className="mt-3 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 flex items-center space-x-2"
     >
       <svg 
