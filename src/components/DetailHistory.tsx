@@ -40,7 +40,7 @@ const TransactionDetails = () => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [amountPaid, setAmountPaid] = useState<number | null>(null);
+  const [amountPaid, setAmountPaid] = useState<number>(0);
   const [modalMessage, setModalMessage] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isErrorModal, setIsErrorModal] = useState<boolean>(false);
@@ -53,18 +53,17 @@ const TransactionDetails = () => {
         const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/transaction/${transactionId}`);
         if (!response.ok) throw new Error("Failed to fetch transaction details");
      
-
         const data: Transaction = await response.json();
-      
+        
         setTransaction(data);
-        setAmountPaid(data.amount_paid);
+        // Jangan set amountPaid ke amount_paid sebelumnya
       } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchTransaction();
   }, [transactionId]);
 
@@ -425,22 +424,29 @@ doc.save("transaction_details.pdf");
 ) : (
 
   <div> 
-<div className="mt-4">
+{/* ✅ Menampilkan Sisa Hutang */}
+<div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mt-4">
+  <p><strong>Sisa Hutang:</strong> Rp. {(
+    transaction.total_transaction_price - transaction.amount_paid
+  ).toLocaleString()}</p>
+</div>
+    <div className="mt-4">
     <label className="block font-semibold">Masukkan Jumlah Pembayaran:</label>
-    <input
-      type="text" // Change type to "text" to allow formatted display
-      value={amountPaid === 0 ? "" : `Rp. ${amountPaid?.toLocaleString("id-ID") ?? ""}`}
+      <input
+  type="text"
+  value={amountPaid === 0 ? "" : `Rp. ${amountPaid.toLocaleString("id-ID")}`}
 
+  onChange={(e) => {
+    // Hanya ambil angka
+    const rawValue = e.target.value.replace(/\D/g, ""); 
+    const inputAmount = parseInt(rawValue, 10) || 0;
 
-      onChange={(e) => {
-        // Remove non-numeric characters (dots, spaces, etc.)
-        const rawValue = e.target.value.replace(/\D/g, ""); 
-        const inputAmount = parseInt(rawValue, 10);
-        setAmountPaid(isNaN(inputAmount) ? 0 : Math.min(inputAmount, transaction.total_transaction_price - transaction.amount_paid));
-      }}
-      placeholder="Rp. 0"
-      className="border p-2 rounded w-full mt-2"
-    />
+    // Tetap mulai dari 0 dan batasi jumlah pembayaran
+    setAmountPaid(Math.min(inputAmount, transaction.total_transaction_price - transaction.amount_paid));
+  }}
+  placeholder="Rp. 0"
+  className="border p-2 rounded w-full mt-2"
+/>
    
   </div>
   <div className="flex justify-between space-x-4"> {/* Add space between the buttons */}
@@ -449,17 +455,16 @@ doc.save("transaction_details.pdf");
     onClick={() => navigate("/repayment")} 
     className="mt-3 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
   >
-    Back to Repayment
+    Kembali
   </button>
 
-  <button
-    onClick={handleUpdatePayment}
-    className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-  >
-    Update Payment
-  </button>
-</div>
-
+    <button
+      onClick={handleUpdatePayment}
+      className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+    >
+      Perbarui Pembayaran
+    </button>
+  </div>
   </div>
 )}
 
@@ -472,11 +477,6 @@ doc.save("transaction_details.pdf");
     {modalMessage}
   </div>
 )}
-
-
-
-
-
 
 {/* ✅ Modal for success or error */}
 {modalVisible && (
