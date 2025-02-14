@@ -289,8 +289,8 @@ doc.save("transaction_details.pdf");
       <h1 className="text-2xl font-bold mb-4">Detail Transaksi</h1>
       <p><strong>Nama Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
       <p><strong>Tanggal Pembelian:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
-      <p><strong>Total Stok:</strong> {transaction.total_qty} pcs</p>
-      <p><strong>Total Harga:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p>
+      {/* <p><strong>Total Stok:</strong> {transaction.total_qty} pcs</p>  */}
+      {/* <p><strong>Total Harga:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p> */}
       <p><strong>Status:</strong> {transaction.is_completed ? "Lunas" : "Belum Lunas"}</p>
 
     
@@ -319,6 +319,18 @@ doc.save("transaction_details.pdf");
       </tr>
     )}
   </tbody>
+  <tfoot>
+    <tr className="bg-gray-200 font-semibold">
+      <td colSpan={1} className="border border-gray-300 px-4 py-2 text-center">Total</td>
+      <td className="border border-gray-300 px-4 py-2 text-center">
+        {transaction.products.reduce((acc, product) => acc + product.quantity, 0)} pcs
+      </td>
+      <td className="border border-gray-300 px-4 py-2 text-center">-</td>
+      <td className="border border-gray-300 px-4 py-2 text-center">
+        Rp. {transaction.products.reduce((acc, product) => acc + (product.quantity * product.price_per_unit), 0).toLocaleString()}
+      </td>
+    </tr>
+  </tfoot>
 </table>
 
 <h2 className="text-xl font-bold mt-6">Riwayat Jumlah yang Dibayar</h2>
