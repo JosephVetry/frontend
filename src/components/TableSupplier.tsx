@@ -52,10 +52,10 @@ export default function Component() {
             <Table.Body className="divide-y">
               {paginatedSuppliers.map((supplier) => (
                 <Table.Row key={supplier._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell>{supplier.supplier_name}</Table.Cell>
-                  <Table.Cell>{supplier.address}</Table.Cell>
-                  <Table.Cell>{supplier.phone_number}</Table.Cell>
-                  <Table.Cell >
+                  <Table.Cell className="text-gray-900">{supplier.supplier_name}</Table.Cell>
+                  <Table.Cell className="text-gray-900">{supplier.address}</Table.Cell>
+                  <Table.Cell className="text-gray-900">{supplier.phone_number}</Table.Cell>
+                  <Table.Cell className="text-gray-900">
   <Link className="flex items-center" to={`/detailtransaksi/${supplier._id}`}>
   <Button>
      <div className="flex items-center gap-2">
@@ -92,16 +92,16 @@ export default function Component() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
               disabled={currentPage === 1}
             >
-              Previous
+              Sebelumnya
             </Button>
             <span className="text-gray-900 dark:text-white">
-              Page {currentPage} of {totalPages}
+             Halaman {currentPage} dari {totalPages}
             </span>
             <Button 
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
               disabled={currentPage === totalPages}
             >
-              Next
+              Selanjutnya
             </Button>
           </div>
         </div>

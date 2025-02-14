@@ -73,16 +73,16 @@ export default function Component() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
               disabled={currentPage === 1}
             >
-              Previous
+              Sebelumnya
             </Button>
             <span className="text-gray-900 dark:text-white">
-              Page {currentPage} of {totalPages}
+              Halaman {currentPage} dari {totalPages}
             </span>
             <Button 
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
               disabled={currentPage === totalPages}
             >
-              Next
+              Selanjutnya
             </Button>
           </div>
         </div>

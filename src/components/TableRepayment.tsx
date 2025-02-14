@@ -61,20 +61,20 @@ export default function TransactionsTable() {
             <Table.Body className="divide-y">
               {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                  <Table.Cell className="text-center">{transaction.id_supplier.supplier_name}</Table.Cell>
-                  <Table.Cell className="text-center">{transaction.total_qty} pcs</Table.Cell>
-                  <Table.Cell className="text-center">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
-                  <Table.Cell className="text-center">Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
-                  <Table.Cell className="text-center">{transaction.is_completed ? "Lunas" : "Belum Lunas"}</Table.Cell>
-                  <Table.Cell className="text-center">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">{transaction.id_supplier.supplier_name}</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">{transaction.total_qty} pcs</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">{transaction.is_completed ? "Lunas" : "Belum Lunas"}</Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
                   <Table.Cell>
-                  <div className=" flex justify-center items-center">
-  {!transaction.is_completed && (
-    <Link to={`/historydetail/${transaction._id}`} className="w-36">
-      <Button className="w-full h-10 text-sm whitespace-nowrap">Perbarui Pembayaran</Button>
-    </Link>
-  )}
-</div>
+                  <div className="flex flex-col items-center space-y-2">
+                    {!transaction.is_completed && (
+                      <Link to={`/historydetail/${transaction._id}`} className="w-36">
+                        <Button className="w-full h-10 text-sm whitespace-nowrap">Perbarui Pembayaran</Button>
+                      </Link>
+                    )}
+                  </div>
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -86,16 +86,16 @@ export default function TransactionsTable() {
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} 
               disabled={currentPage === 1}
             >
-              Previous
+              Sebelumnya
             </Button>
             <span className="text-gray-900 dark:text-white">
-              Page {currentPage} of {totalPages}
+              Halaman {currentPage} dari {totalPages}
             </span>
             <Button 
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))} 
               disabled={currentPage === totalPages}
             >
-              Next
+              Selanjutnya
             </Button>
           </div>
         </div>
