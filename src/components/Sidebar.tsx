@@ -11,16 +11,16 @@ export default function Component() {
         <Sidebar.Items>
           <Sidebar.ItemGroup>
           <Sidebar.Item as={Link} to="/dashboard" icon={HiChartPie} className="text-sm space-x-0">
-              Pharmacy Items
+              Data Barang
             </Sidebar.Item>
             <Sidebar.Item as={Link} to="/supplier" icon={HiUser} className="text-sm space-x-0">
               Supplier
             </Sidebar.Item>
             <Sidebar.Item as={Link} to="/repayment" icon={HiOutlineClipboardList} className="text-sm space-x-0">
-              Repayment
+              Data Hutang
             </Sidebar.Item>
             <Sidebar.Item as={Link} to="/history" icon={HiOutlineClipboardCheck} className="text-sm space-x-0">
-              Transaction History
+              Data Transaksi
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
