@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, Button } from "flowbite-react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 interface Supplier {
   _id: string;
