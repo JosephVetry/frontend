@@ -51,23 +51,25 @@ export default function TransactionsTable() {
           <Table hoverable>
             <Table.Head>
               <Table.HeadCell className="text-center">Nama Supplier</Table.HeadCell>
-              <Table.HeadCell className="text-center">Total Stok</Table.HeadCell>
-              <Table.HeadCell className="text-center">Total Harga Transaksi</Table.HeadCell>
+              {/* <Table.HeadCell className="text-center">Total Stok</Table.HeadCell> */}
+              <Table.HeadCell className="text-center">Total Transaksi</Table.HeadCell>
               <Table.HeadCell className="text-center">Jumlah Terbayarkan</Table.HeadCell>
-              <Table.HeadCell className="text-center">Status</Table.HeadCell>
-              <Table.HeadCell className="text-center">Tanggal Pembelian</Table.HeadCell>
-              <Table.HeadCell className="text-center">Lain-lain</Table.HeadCell>
+              <Table.HeadCell className="text-center">Sisa Hutang</Table.HeadCell>
+              {/* <Table.HeadCell className="text-center">Status</Table.HeadCell> */}
+              {/* <Table.HeadCell className="text-center">Tanggal Pembelian</Table.HeadCell> */}
+              {/* <Table.HeadCell className="text-center">Lain-lain</Table.HeadCell> */}
             </Table.Head>
             <Table.Body className="divide-y">
               {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="text-center text-gray-900">{transaction.id_supplier.supplier_name}</Table.Cell>
-                  <Table.Cell className="text-center text-gray-900">{transaction.total_qty} pcs</Table.Cell>
+                  {/* <Table.Cell className="text-center text-gray-900">{transaction.total_qty} pcs</Table.Cell> */}
                   <Table.Cell className="text-center text-gray-900">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
                   <Table.Cell className="text-center text-gray-900">Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
-                  <Table.Cell className="text-center text-gray-900">{transaction.is_completed ? "Lunas" : "Belum Lunas"}</Table.Cell>
-                  <Table.Cell className="text-center text-gray-900">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="text-center text-gray-900">Rp. {Math.abs(Number(transaction.amount_paid) - Number(transaction.total_transaction_price)).toLocaleString('id-ID')}</Table.Cell>
+                  {/* <Table.Cell className="text-center text-gray-900">{transaction.is_completed ? "Lunas" : "Belum Lunas"}</Table.Cell> */}
+                  {/* <Table.Cell className="text-center text-gray-900">{new Date(transaction.purchase_date).toLocaleDateString()}</Table.Cell> */}
+                  {/* <Table.Cell>
                   <div className="flex flex-col items-center space-y-2">
                     {!transaction.is_completed && (
                       <Link to={`/historydetail/${transaction._id}`} className="w-36">
@@ -75,7 +77,7 @@ export default function TransactionsTable() {
                       </Link>
                     )}
                   </div>
-                  </Table.Cell>
+                  </Table.Cell> */}
                 </Table.Row>
               ))}
             </Table.Body>
