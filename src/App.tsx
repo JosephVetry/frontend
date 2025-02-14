@@ -8,6 +8,7 @@ import History from './pages/HistoryTransaction'
 import ItemDetail from "./pages/itemDetail"
 import HistoryDetail from "./pages/DetailHistory"
 import Repayment from './pages/Repayment'
+import EditSupplier from './pages/EditSupplier'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="/repayment" element={<Repayment />} />
         <Route path="/history" element={<History />} />
         <Route path="/itemdetail" element={<ItemDetail />} />
+        <Route path="/editsupplier/:supplierId" element={<EditSupplier />} />
         <Route path="/detailtransaksi/:supplierId" element={<DetailTransaksi />} />
         <Route path="/historydetail/:transactionId" element={<HistoryDetail />} />
       </Routes>

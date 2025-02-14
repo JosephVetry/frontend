@@ -12,6 +12,7 @@ const RegistrationForm = () => {
 
   const [message, setMessage] = useState("");
   const [showModal, setShowModal] = useState(false);
+  // const [showDeleteModal, setShowDeleteModal] = useState(false);
   const navigate = useNavigate();
 
   // Handle input change for supplier details
@@ -37,6 +38,30 @@ const RegistrationForm = () => {
     const updatedProducts = formData.products.filter((_, i) => i !== index);
     setFormData({ ...formData, products: updatedProducts });
   };
+
+  // Delete Supplier
+  // const handleDelete = async () => {
+  //   try {
+  //     const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/supplier/delete/${supplierId}`, {
+  //       method: "DELETE",
+  //     });
+  
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete supplier");
+  //     }
+  
+  //     setMessage("Supplier successfully deleted!");
+  //     setShowDeleteModal(false);
+  
+  //     // Redirect ke halaman supplier setelah hapus
+  //     setTimeout(() => {
+  //       navigate("/supplier");
+  //     }, 2000);
+  //   } catch (error: any) {
+  //     setMessage(`Error: ${error.message}`);
+  //   }
+  // };
+  
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -150,6 +175,10 @@ const RegistrationForm = () => {
   </div>
 ))}
 <Button type="button" onClick={addProduct} className="mt-4 w-full">+ Tambah Produk</Button>
+
+
+{/* Button untuk Delete Supplier */}
+{/* <Button type="button" color="red" onClick={() => setShowDeleteModal(true)} className="w-full">Delete Supplier</Button> */}
 
       
         </div>
