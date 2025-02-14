@@ -95,7 +95,7 @@ const RegistrationForm = () => {
 
         {/* Phone Number */}
         <div>
-          <Label htmlFor="phone_number" value="Phone Number" />
+          <Label htmlFor="phone_number" value="Nomor Telepon" />
           <TextInput
             id="phone_number"
             name="phone_number"
@@ -124,14 +124,14 @@ const RegistrationForm = () => {
 
         {/* Product List */}
         <div>
-          <Label value="Products" />
+          <Label value="Produk" />
         {formData.products.map((product, index) => (
   <div key={index} className="flex flex-col gap-2 p-2 border rounded-lg shadow-sm">
-    <Label>Product {index + 1}</Label>
+    <Label>Produk {index + 1}</Label>
     <TextInput
       type="text"
       name="product_name"
-      placeholder="Product Name"
+      placeholder="Nama Produk"
       required
       value={product.product_name}
       onChange={(e) => handleProductChange(index, e)}
@@ -139,7 +139,7 @@ const RegistrationForm = () => {
     <TextInput
       type="number"
       name="sell_price"
-      placeholder="Price"
+      placeholder="Harga"
       required
       value={product.sell_price}
       onChange={(e) => handleProductChange(index, e)}
@@ -149,7 +149,7 @@ const RegistrationForm = () => {
     )}
   </div>
 ))}
-<Button type="button" onClick={addProduct} className="mt-4 w-full">+ Add Product</Button>
+<Button type="button" onClick={addProduct} className="mt-4 w-full">+ Tambah Produk</Button>
 
       
         </div>

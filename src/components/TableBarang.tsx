@@ -40,14 +40,14 @@ export default function Component() {
     <div className="flex">
       
       <main className="flex-1 ml-48 mt-16 p-4">
-      <h2 className="text-2xl font-semibold mb-4">Pharmacy Items</h2>
+      <h2 className="text-2xl font-semibold mb-4">Data Barang</h2>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
-              <Table.HeadCell>Product Name</Table.HeadCell>
-              <Table.HeadCell>Buy Price</Table.HeadCell>
+              <Table.HeadCell>Nama Produk</Table.HeadCell>
+              <Table.HeadCell>Harga Beli</Table.HeadCell>
               
-              <Table.HeadCell>Qty</Table.HeadCell>
+              <Table.HeadCell>Stok</Table.HeadCell>
             </Table.Head>
             <Table.Body className="divide-y">
               {paginatedProducts.map((product) => (
@@ -60,7 +60,7 @@ export default function Component() {
                   </Table.Cell>
                  
                   <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
-                    {product.total_quantity}
+                    {product.total_quantity} pcs
                   </Table.Cell>
                 </Table.Row>
               ))}

@@ -43,10 +43,10 @@ export default function Component() {
           </div>
           <Table hoverable>
             <Table.Head>
-              <Table.HeadCell>Supplier Name</Table.HeadCell>
-              <Table.HeadCell>Address</Table.HeadCell>
-              <Table.HeadCell>Phone Number</Table.HeadCell>
-              <Table.HeadCell >Other</Table.HeadCell>
+              <Table.HeadCell>Nama Supplier</Table.HeadCell>
+              <Table.HeadCell>Alamat</Table.HeadCell>
+              <Table.HeadCell>Nomor Telepon</Table.HeadCell>
+              <Table.HeadCell >Lain-lain</Table.HeadCell>
            
             </Table.Head>
             <Table.Body className="divide-y">
@@ -74,7 +74,7 @@ export default function Component() {
         <circle cx="19" cy="21" r="1"/>
         <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
       </svg>
-      <span>Buy</span>
+      <span>Beli</span>
      </div>
     </Button>
   </Link>

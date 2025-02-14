@@ -135,15 +135,15 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <header className="text-center">
-            <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Detail Transaction</h1>
+            <h1 className="text-xl font-bold text-gray-900 sm:text-3xl">Detail Transaksi</h1>
           </header>
           <form onSubmit={handleSubmit} className="mt-8">
             <table className="w-full border-collapse border border-gray-300 mt-8">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Product</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Price</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
+                  <th className="border border-gray-300 px-4 py-2 text-left">Produk</th>
+                  <th className="border border-gray-300 px-4 py-2 text-center">Harga</th>
+                  <th className="border border-gray-300 px-4 py-2 text-center">Stok</th>
                   <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
                   <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
                 </tr>

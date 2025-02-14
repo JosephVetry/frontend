@@ -7,7 +7,7 @@ const AddSupplierButton = () => {
   return (
     <div className="mb-5 flex flex-wrap gap-2">
       <Link to="/addsupplier">
-        <Button> Add Supplier</Button>
+        <Button> Tambah Supplier</Button>
       </Link>
     </div>
   );

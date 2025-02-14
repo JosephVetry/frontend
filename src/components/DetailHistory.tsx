@@ -287,22 +287,22 @@ doc.save("transaction_details.pdf");
 
   return (
     <div className="max-w-4xl mx-auto mt-16 p-12 bg-white shadow-lg rounded-lg">
-      <h1 className="text-2xl font-bold mb-4">Transaction Details</h1>
-      <p><strong>Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
-      <p><strong>Purchase Date:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
-      <p><strong>Total Quantity:</strong> {transaction.total_qty}</p>
-      <p><strong>Total Price:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p>
-      <p><strong>Status:</strong> {transaction.is_completed ? "Completed" : "Pending"}</p>
+      <h1 className="text-2xl font-bold mb-4">Detail Transaksi</h1>
+      <p><strong>Nama Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
+      <p><strong>Tanggal Pembelian:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
+      <p><strong>Total Stok:</strong> {transaction.total_qty} pcs</p>
+      <p><strong>Total Harga:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p>
+      <p><strong>Status:</strong> {transaction.is_completed ? "Lunas" : "Belum Lunas"}</p>
 
     
 
-<h2 className="text-xl font-bold mt-6">Products</h2>
+<h2 className="text-xl font-bold mt-6">Barang-barang</h2>
 <table className="w-full mt-4 border-collapse border border-gray-300">
   <thead>
     <tr className="bg-gray-100">
-      <th className="border border-gray-300 px-4 py-2 text-left">Product Name</th>
-      <th className="border border-gray-300 px-4 py-2 text-center">Quantity</th>
-      <th className="border border-gray-300 px-4 py-2 text-center">Price per Unit</th>
+      <th className="border border-gray-300 px-4 py-2 text-left">Nama Produk</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Stok</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Harga Satuan</th>
       <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
     </tr>
   </thead>
@@ -310,7 +310,7 @@ doc.save("transaction_details.pdf");
     {transaction.products.length > 0 ? transaction.products.map((product) => (
       <tr key={product._id} className="border-b border-gray-300">
         <td className="border border-gray-300 px-4 py-2">{product.product_name}</td>
-        <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity}</td>
+        <td className="border border-gray-300 px-4 py-2 text-center">{product.quantity} pcs</td>
         <td className="border border-gray-300 px-4 py-2 text-center">Rp. {product.price_per_unit.toLocaleString()}</td>
         <td className="border border-gray-300 px-4 py-2 text-center">Rp. {(product.quantity * product.price_per_unit).toLocaleString()}</td>
       </tr>
@@ -322,12 +322,12 @@ doc.save("transaction_details.pdf");
   </tbody>
 </table>
 
-<h2 className="text-xl font-bold mt-6">Amount Paid History</h2>
+<h2 className="text-xl font-bold mt-6">Riwayat Jumlah yang Dibayar</h2>
 <table className="w-full mt-4 border-collapse border border-gray-300">
 <thead>
 <tr className="bg-gray-100">
-<th className="border border-gray-300 px-4 py-2 text-center">Date</th>
-<th className="border border-gray-300 px-4 py-2 text-center">Amount</th>
+<th className="border border-gray-300 px-4 py-2 text-center">Tanggal</th>
+<th className="border border-gray-300 px-4 py-2 text-center">Jumlah</th>
 </tr>
 </thead>
 <tbody>
@@ -344,7 +344,7 @@ doc.save("transaction_details.pdf");
     </tr>
   ))}
   <tr className="bg-gray-200 font-bold">
-    <td className="border border-gray-300 px-4 py-2 text-center">Total Amount Paid</td>
+    <td className="border border-gray-300 px-4 py-2 text-center">Jumlah Total Pembayaran</td>
     <td className="border border-gray-300 px-4 py-2 text-center">
       Rp. {transaction.amount_paid_history.reduce((sum, payment) => sum + payment.amount, 0).toLocaleString()}
     </td>
@@ -352,7 +352,8 @@ doc.save("transaction_details.pdf");
 </>
 ) : (
 <tr>
-  <td colSpan={2} className="text-center py-4">No payment history found.</td>
+  <td colSpan={2} className="text-center py-4">
+  Tidak ditemukan riwayat pembayaran.</td>
 </tr>
 )}
 </tbody>
@@ -392,7 +393,7 @@ doc.save("transaction_details.pdf");
         <polyline points="7 10 12 15 17 10"/>
         <line x1="12" x2="12" y1="15" y2="3"/>
       </svg>
-      <span>Products PDF</span>
+      <span>Produk PDF</span>
     </button>
     
     <button 
@@ -414,7 +415,7 @@ doc.save("transaction_details.pdf");
         <polyline points="7 10 12 15 17 10"/>
         <line x1="12" x2="12" y1="15" y2="3"/>
       </svg>
-      <span>Payment PDF</span>
+      <span>Pembayaran PDF</span>
     </button>
   </div>
 </div>
@@ -425,7 +426,7 @@ doc.save("transaction_details.pdf");
 
   <div> 
 <div className="mt-4">
-    <label className="block font-semibold">Enter Payment Amount:</label>
+    <label className="block font-semibold">Masukkan Jumlah Pembayaran:</label>
     <input
       type="text" // Change type to "text" to allow formatted display
       value={amountPaid === 0 ? "" : `Rp. ${amountPaid?.toLocaleString("id-ID") ?? ""}`}
