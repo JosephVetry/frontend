@@ -42,7 +42,7 @@ export default function EditSupplier() {
     console.log(supplierId);
     // Fetch supplier data here and set it to state
     // Example:
-    fetch(`http://localhost:3000/api/supplier/${supplierId}/product`)
+    fetch(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/product`)
       .then(response => response.json())
       .then(data => setSupplier(data));
   }, [supplierId]);
