@@ -48,7 +48,10 @@ export default function TransactionsTable() {
   return (
     <div className="flex">
       <main className="flex-1 ml-48 mt-16 p-4">
+        
         <h2 className="text-2xl font-semibold mb-4">Data Transaksi</h2>
+        <div className="p-4 flex justify-end">Total Transaksi : {transactions.length} </div>
+     
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>

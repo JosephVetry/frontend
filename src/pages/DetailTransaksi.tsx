@@ -18,10 +18,6 @@ export default function DetailTransaksi() {
     }
   }, [navigate]);
 
-  useEffect(() => {
-    console.log("Supplier ID from query params:", supplierId);
-  }, [supplierId]); // Logs supplierId whenever it changes
-
   return (
     <div>
       <Navbar />
