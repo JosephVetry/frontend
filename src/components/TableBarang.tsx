@@ -40,10 +40,11 @@ export default function Component() {
     <div className="flex">
       
       <main className="flex-1 ml-48 mt-16 p-4">
-      <h2 className="text-2xl font-semibold mb-4">Data Barang</h2>
+      <h2 className="text-2xl font-semibold mb-4">Data Produk</h2>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
+              <Table.HeadCell>No. Produk</Table.HeadCell>
               <Table.HeadCell>Nama Produk</Table.HeadCell>
               <Table.HeadCell>Harga Beli</Table.HeadCell>
               
@@ -52,6 +53,9 @@ export default function Component() {
             <Table.Body className="divide-y">
               {paginatedProducts.map((product) => (
                 <Table.Row key={product._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
+                    {product._id}
+                  </Table.Cell>
                   <Table.Cell className="whitespace-nowrap text-gray-900 dark:text-white">
                     {product.product_name}
                   </Table.Cell>

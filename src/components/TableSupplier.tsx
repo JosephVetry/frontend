@@ -19,6 +19,8 @@ export default function Component() {
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const itemsPerPage = 5;
 
   useEffect(() => {
@@ -26,7 +28,9 @@ export default function Component() {
       .get("https://pharmacy-api-roan.vercel.app/api/supplier")
       .then((response) => {
         setSuppliers(response.data);
+        console.log(response.data);
       })
+      
       .catch((error) => {
         console.error("Error fetching suppliers:", error);
       });
@@ -36,14 +40,21 @@ export default function Component() {
   const clickDelete = async () => {
     try {
       await axios.delete(
-        `https://pharmacy-api-roan.vercel.app/api/supplier/${deleteId}`,
+        `https://pharmacy-api-roan.vercel.app/api/supplier/${deleteId}/delete-supplier`
       );
       setSuppliers(suppliers.filter((supplier) => supplier._id !== deleteId));
-      setDeleteId(null); // Close modal after deleting
+      setDeleteId(null);
+      setShowSuccessModal(true);
+      
+      setTimeout(() => {
+        setShowSuccessModal(false);
+        window.location.reload(); // Refresh the page after 2 seconds
+      }, 2000);
     } catch (error) {
       console.error("Error deleting supplier:", error);
     }
   };
+  
 
   // Pagination logic
   const totalPages = Math.ceil(suppliers.length / itemsPerPage);
@@ -67,6 +78,9 @@ export default function Component() {
           <Table hoverable>
             <Table.Head>
               <Table.HeadCell className="text-center">
+                No. Supplier
+              </Table.HeadCell>
+              <Table.HeadCell className="text-center">
                 Nama Supplier
               </Table.HeadCell>
               <Table.HeadCell className="text-center">Alamat</Table.HeadCell>
@@ -81,6 +95,9 @@ export default function Component() {
                   key={supplier._id}
                   className="bg-white dark:border-gray-700 dark:bg-gray-800"
                 >
+                  <Table.Cell className="text-center text-gray-900">
+                    {supplier._id}
+                  </Table.Cell>
                   <Table.Cell className="text-center text-gray-900">
                     {supplier.supplier_name}
                   </Table.Cell>
@@ -152,6 +169,16 @@ export default function Component() {
               </div>
             </div>
           )}
+
+          {/* Modal after successfull delete*/}
+          {showSuccessModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="rounded-lg bg-green-500 p-4 text-white shadow-lg">
+      Supplier deleted successfully!
+    </div>
+  </div>
+)}
+
 
           {/* Pagination Controls */}
           <div className="mt-4 flex items-center justify-between">

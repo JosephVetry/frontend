@@ -55,6 +55,7 @@ export default function TransactionsTable() {
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
+              <Table.HeadCell className="text-center">No. Faktur</Table.HeadCell>
               <Table.HeadCell className="text-center">Nama Supplier</Table.HeadCell>
               <Table.HeadCell className="text-center">Total Stok</Table.HeadCell>
               <Table.HeadCell className="text-center">Total Harga Transaksi</Table.HeadCell>
@@ -66,6 +67,7 @@ export default function TransactionsTable() {
             <Table.Body className="divide-y">
               {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="text-center text-gray-900">{transaction._id}</Table.Cell>
                   <Table.Cell className="text-center text-gray-900">{transaction.id_supplier.supplier_name}</Table.Cell>
                   <Table.Cell className="text-center text-gray-900">{transaction.total_qty} pcs</Table.Cell>
                   <Table.Cell className="text-center text-gray-900">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>

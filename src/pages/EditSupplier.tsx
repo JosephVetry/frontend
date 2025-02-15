@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
+import axios from "axios";
 
 interface Product {
   _id: string;
@@ -20,6 +21,8 @@ interface Supplier {
 export default function EditSupplier() {
   const navigate = useNavigate();
   const { supplierId } = useParams<{ supplierId: string }>();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const [supplier, setSupplier] = useState<Supplier>({
     _id: "",
     name: "",
@@ -40,11 +43,14 @@ export default function EditSupplier() {
 
   useEffect(() => {
     console.log(supplierId);
-    // Fetch supplier data here and set it to state
-    // Example:
-    fetch(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/product`)
-      .then(response => response.json())
-      .then(data => setSupplier(data));
+    axios
+      .get(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/product`)
+      .then((response) => {
+        setSupplier(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching supplier:", error);
+      });
   }, [supplierId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, index?: number) => {
@@ -73,17 +79,47 @@ export default function EditSupplier() {
     setSupplier({ ...supplier, products: updatedProducts });
   };
 
+  const handleAddProduct = () => {
+    setSupplier({
+      ...supplier,
+      products: [...supplier.products, { _id: "", name: "", price: 0 }],
+    });
+  };
+
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(supplier);
-    // Submit updated supplier data here
-    // Example:
-    // fetch(`/api/suppliers/${supplierId}`, {
-    //   method: 'PUT',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(supplier)
-    // }).then(() => navigate('/suppliers'));
+  
+    // Transform data to match the required format
+    const updatedSupplier = {
+      _id: supplier._id,
+      supplier_name: supplier.name, 
+      address: supplier.address,
+      phone: supplier.phone,
+      products: supplier.products.map((product) => ({
+        _id: product._id,
+        name: product.name,
+        price: product.price,
+      })),
+    };
+  
+    console.log(updatedSupplier)
+    axios
+      .put(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/edit-supplier`, updatedSupplier)
+      .then(() => {
+        setShowSuccessModal(true);
+        setTimeout(() => {
+          setShowSuccessModal(false);
+          navigate('/supplier'); // Redirect after success
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error updating supplier:", error);
+      });
   };
+  
+  
+  
 
   return (
     <div>
@@ -123,35 +159,47 @@ export default function EditSupplier() {
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
               />
             </div>
+      
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Products</label>
-              {supplier.products.map((product, index) => (
-                <div key={product._id} className="mb-2 gap-2 flex items-center">
-                  <input
-                    type="text"
-                    name="name"
-                    value={product.name}
-                    onChange={(e) => handleChange(e, index)}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm mb-1"
-                    placeholder="Product Name"
-                  />
-                  <input
-                    type="text"
-                    value={product.price === 0 ? "" : `Rp. ${product.price.toLocaleString("id-ID")}`}
-                    onChange={(e) => handlePriceChange(e, index)}
-                    placeholder="Rp. 0"
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleDeleteProduct(index)}
-                    className="ml-2 px-2 py-1 bg-red-600 text-white rounded-md"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))}
-            </div>
+  <label className="block text-sm font-medium text-gray-700">Products</label>
+  {supplier.products.map((product, index) => (
+  <div key={index} className="mb-2 gap-2 flex items-center">
+    <input
+      type="text"
+      name="name"
+      value={product.name}
+      onChange={(e) => handleChange(e, index)}
+      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+      placeholder="Product Name"
+      readOnly={!!product._id} // Readonly if the product has an ID (existing product)
+    />
+    <input
+      type="text"
+      value={product.price === 0 ? "" : `Rp. ${product.price.toLocaleString("id-ID")}`}
+      onChange={(e) => handlePriceChange(e, index)}
+      placeholder="Rp. 0"
+      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm"
+      readOnly={!!product._id} // Readonly if the product has an ID (existing product)
+    />
+    <button
+      type="button"
+      onClick={() => handleDeleteProduct(index)}
+      className="ml-2 px-2 py-1 bg-red-600 text-white rounded-md"
+    >
+      Delete
+    </button>
+  </div>
+))}
+
+  <button
+    type="button"
+    onClick={handleAddProduct}
+    className="mt-2 px-4 py-2 bg-green-600 text-white rounded-md"
+  >
+    + Add Product
+  </button>
+</div>
+
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-md"
@@ -159,6 +207,15 @@ export default function EditSupplier() {
               Save
             </button>
           </form>
+          {/* Success Modal */}
+          {showSuccessModal && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="rounded-lg bg-green-500 p-4 text-white shadow-lg">
+      Data updated successfully!
+    </div>
+  </div>
+)}
+
         </main>
       </div>
     </div>
