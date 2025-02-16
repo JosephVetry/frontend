@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Navbar, Button } from "flowbite-react";
-import Logo  from "../assets/LOGO.png"
+import Logo  from "../assets/LOGO2.jpeg"
 
 export default function NavbarComponent() {
   const navigate = useNavigate();
@@ -32,12 +32,12 @@ export default function NavbarComponent() {
       <Navbar.Brand>
         <img 
           src={Logo}
-          className="mr-3 h-6 sm:h-9" 
+          className="mr-3 h-10 sm:h-12" 
           alt="Pharmacy Logo" 
         />
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
+        {/* <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Pharmacy
-        </span>
+        </span> */}
       </Navbar.Brand>
       <div className="flex items-center md:order-2 gap-4">
         {username && (
