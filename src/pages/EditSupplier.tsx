@@ -126,7 +126,7 @@ export default function EditSupplier() {
         }, 2000);
       })
       .catch((error) => {
-        console.error("Error updating supplier:", error);
+        console.error("Masalah ketika perbarui supplier:", error);
       });
   };
   
@@ -143,7 +143,7 @@ export default function EditSupplier() {
           <h2 className="mb-4 text-2xl font-semibold">Edit Supplier</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Name</label>
+              <label className="block text-sm font-medium text-gray-700">Nama</label>
               <input
                 type="text"
                 name="name"
@@ -153,7 +153,7 @@ export default function EditSupplier() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Address</label>
+              <label className="block text-sm font-medium text-gray-700">Alamat</label>
               <input
                 type="text"
                 name="address"
@@ -163,7 +163,7 @@ export default function EditSupplier() {
               />
             </div>
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
+              <label className="block text-sm font-medium text-gray-700">Nomor Telepon</label>
               <input
                 type="text"
                 name="phone"
@@ -174,7 +174,7 @@ export default function EditSupplier() {
             </div>
       
             <div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Products</label>
+  <label className="block text-sm font-medium text-gray-700">Produk</label>
   {supplier.products.map((product, index) => (
   <div key={index} className="mb-2 gap-2 flex items-center">
     <input
@@ -199,7 +199,7 @@ export default function EditSupplier() {
       onClick={() => handleDeleteProduct(index)}
       className="ml-2 px-2 py-1 bg-red-600 text-white rounded-md"
     >
-      Delete
+      Hapus
     </button>
   </div>
 ))}
@@ -209,7 +209,7 @@ export default function EditSupplier() {
     onClick={handleAddProduct}
     className="mt-2 px-4 py-2 bg-green-600 text-white rounded-md"
   >
-    + Add Product
+    + Tambah Produk
   </button>
 </div>
 
@@ -217,17 +217,17 @@ export default function EditSupplier() {
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-md"
             >
-              Save
+              Simpan
             </button>
           </form>
           {/* Success Modal */}
           {showSuccessModal && (
-  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-    <div className="rounded-lg bg-green-500 p-4 text-white shadow-lg">
-      Data updated successfully!
-    </div>
-  </div>
-)}
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="rounded-lg bg-green-500 p-4 text-white shadow-lg">
+                Data berhasil di perbarui
+              </div>
+            </div>
+          )}
 
         </main>
       </div>

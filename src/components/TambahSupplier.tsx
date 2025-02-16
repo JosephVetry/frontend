@@ -58,10 +58,10 @@ const RegistrationForm = () => {
       
 
       if (!response.ok) {
-        throw new Error("Failed to add supplier and products");
+        throw new Error("Gagal untuk menambahkan Supplier dan Produk");
       }
 
-      setMessage("Supplier and products successfully added!");
+      setMessage("Berhasil menambahkan Supplier dan Produk");
       setShowModal(true);
 
       // Reset form
@@ -174,10 +174,10 @@ const RegistrationForm = () => {
       <Modal show={showModal} onClose={() => setShowModal(false)}>
         <Modal.Header>Success</Modal.Header>
         <Modal.Body>
-          <p>Supplier and products successfully added! Redirecting...</p>
+          <p>Supplier dan produk berhasil di tambahkan! Mengarahkan...</p>
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={() => navigate("/supplier")}>Go Now</Button>
+          <Button onClick={() => navigate("/supplier")}>Pergi Sekarang</Button>
         </Modal.Footer>
       </Modal>
     </div>

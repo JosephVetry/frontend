@@ -146,7 +146,7 @@ export default function Component() {
                           >
                             <div className="flex items-center gap-1">
                               <AiFillDelete />
-                              <span>Delete</span>
+                              <span>Hapus</span>
                             </div>
                           </Button>
                         </>
@@ -162,20 +162,20 @@ export default function Component() {
           {deleteId && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="rounded-lg bg-white p-6 shadow-lg">
-                <h2 className="mb-4 text-lg font-semibold">Confirm Delete</h2>
-                <p>Are you sure you want to delete this supplier?</p>
+                <h2 className="mb-4 text-lg font-semibold">Yakin Hapus</h2>
+                <p>Kamu yakin mau hapus Supplier ini?</p>
                 <div className="mt-4 flex justify-end gap-3">
                   <Button
                     onClick={clickDelete}
                     className="rounded-lg bg-red-700 px-4 py-2 text-white transition hover:bg-red-800"
                   >
-                    Yes, Delete
+                    Iya, Hapus
                   </Button>
                   <Button
                     onClick={() => setDeleteId(null)}
                     className="rounded-lg bg-gray-500 px-4 py-2 text-white transition hover:bg-gray-600"
                   >
-                    Cancel
+                    Batal
                   </Button>
                 </div>
               </div>
@@ -186,7 +186,7 @@ export default function Component() {
           {showSuccessModal && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
               <div className="rounded-lg bg-green-500 p-4 text-white shadow-lg">
-                Supplier deleted successfully!
+                Supplier berhasil di hapus!
               </div>
             </div>
           )}
