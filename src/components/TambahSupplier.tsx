@@ -39,39 +39,19 @@ const RegistrationForm = () => {
     setFormData({ ...formData, products: updatedProducts });
   };
 
-  // Delete Supplier
-  // const handleDelete = async () => {
-  //   try {
-  //     const response = await fetch(`https://pharmacy-api-roan.vercel.app/api/supplier/delete/${supplierId}`, {
-  //       method: "DELETE",
-  //     });
-  
-  //     if (!response.ok) {
-  //       throw new Error("Failed to delete supplier");
-  //     }
-  
-  //     setMessage("Supplier successfully deleted!");
-  //     setShowDeleteModal(false);
-  
-  //     // Redirect ke halaman supplier setelah hapus
-  //     setTimeout(() => {
-  //       navigate("/supplier");
-  //     }, 2000);
-  //   } catch (error: any) {
-  //     setMessage(`Error: ${error.message}`);
-  //   }
-  // };
+
   
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    const token = localStorage.getItem("token"); // ✅ Retrieve token from localStorage
+    console.log(token)
     try {
       const response = await fetch("https://pharmacy-api-roan.vercel.app/api/supplier/add-supplier-products", { 
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/json",Authorization: `${token}` // ✅ Attach token in headers
         },
         body: JSON.stringify(formData),
       });

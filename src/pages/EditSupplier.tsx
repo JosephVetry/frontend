@@ -47,6 +47,7 @@ export default function EditSupplier() {
       .get(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/product`)
       .then((response) => {
         setSupplier(response.data);
+        console.log(response.data)
       })
       .catch((error) => {
         console.error("Error fetching supplier:", error);
@@ -90,6 +91,8 @@ export default function EditSupplier() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   
+    const token = localStorage.getItem("token"); // ✅ Retrieve token from localStorage
+  
     // Transform data to match the required format
     const updatedSupplier = {
       _id: supplier._id,
@@ -103,20 +106,30 @@ export default function EditSupplier() {
       })),
     };
   
-    console.log(updatedSupplier)
+    console.log(updatedSupplier);
+    console.log(token)
     axios
-      .put(`https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/edit-supplier`, updatedSupplier)
+      .put(
+        `https://pharmacy-api-roan.vercel.app/api/supplier/${supplierId}/edit-supplier`,
+        updatedSupplier,
+        {
+          headers: {
+            Authorization: `${token}`, // ✅ Attach token in headers
+          },
+        }
+      )
       .then(() => {
         setShowSuccessModal(true);
         setTimeout(() => {
           setShowSuccessModal(false);
-          navigate('/supplier'); // Redirect after success
+          navigate("/supplier"); // Redirect after success
         }, 2000);
       })
       .catch((error) => {
         console.error("Error updating supplier:", error);
       });
   };
+  
   
   
   

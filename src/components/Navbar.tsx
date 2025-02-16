@@ -1,20 +1,28 @@
 "use client";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Navbar, Button } from "flowbite-react";
 
 export default function NavbarComponent() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Get username from localStorage
+    const storedUsername = localStorage.getItem("user");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   const handleLogout = () => {
-    localStorage.clear(); // Hapus semua data di localStorage
+    localStorage.clear(); // Clear all data
 
-    // Hapus riwayat sebelumnya agar tombol "Back" tidak bisa kembali ke halaman setelah logout
+    // Prevent going back after logout
     window.history.pushState(null, "", "/");
 
-    // Redirect ke halaman utama dan hapus halaman sebelumnya dari history
+    // Redirect to home and reload page
     navigate("/", { replace: true });
-
-    // Reload halaman untuk memastikan state benar-benar bersih
     window.location.reload();
   };
 
@@ -24,17 +32,19 @@ export default function NavbarComponent() {
         <img 
           src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-opened-capsule-icon-logo-cartoon-png-image_5319391.png" 
           className="mr-3 h-6 sm:h-9" 
-          alt="Flowbite React Logo" 
+          alt="Pharmacy Logo" 
         />
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Pharmacy
         </span>
       </Navbar.Brand>
-      <div className="flex md:order-2">
+      <div className="flex items-center md:order-2 gap-4">
+        {username && (
+          <span className="text-gray-700 font-medium">Hi , {username}</span> // ✅ Display username
+        )}
         <Button onClick={handleLogout}>Keluar</Button>
         <Navbar.Toggle />
       </div>
     </Navbar>
   );
 }
-
