@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Navbar, Button } from "flowbite-react";
+import Logo  from "../assets/LOGO.png"
 
 export default function NavbarComponent() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function NavbarComponent() {
     <Navbar fluid rounded className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
       <Navbar.Brand>
         <img 
-          src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-opened-capsule-icon-logo-cartoon-png-image_5319391.png" 
+          src={Logo}
           className="mr-3 h-6 sm:h-9" 
           alt="Pharmacy Logo" 
         />
