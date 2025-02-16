@@ -41,6 +41,7 @@ export default function Component() {
       
       <main className="flex-1 ml-48 mt-16 p-4">
       <h2 className="text-2xl font-semibold mb-4">Data Produk</h2>
+      <div className="flex justify-end mr-12 mt-6">Total Produk : {products.length}</div>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>

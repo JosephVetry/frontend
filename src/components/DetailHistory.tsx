@@ -69,90 +69,88 @@ const TransactionDetails = () => {
 
   const handleDownloadProductPDF = () => {
     if (!transaction) return;
-  
+
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(16); // Set font size to 12
+    doc.setFontSize(16);
     doc.text("FAKTUR PEMBELIAN", 120, 15);
-  
+
     // ✅ Add transaction details side by side (Supplier | No Faktur) and (Alamat | Tgl)
     doc.setFont("helvetica", "normal");
-    
-    const supplierText = `Supplier    : ${transaction.id_supplier.supplier_name}`;
-    const alamatText = `Alamat      : ${transaction.id_supplier.address}`; // Replace with actual address field if available
-    const noFakturText = `No Faktur       : ${transaction._id}`;
-    const tglText = `Tanggal          : ${new Date(transaction.purchase_date).toLocaleDateString()}`;
-  
+
+    const supplierText = `Supplier    : ${transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}`;
+    const alamatText = `Alamat      : ${transaction.id_supplier?.address || "N/A"}`; // Replace with actual address field if available
+    const noFakturText = `No Faktur   : ${transaction._id}`;
+    const tglText = `Tanggal     : ${new Date(transaction.purchase_date).toLocaleDateString()}`;
+
     // First row (Supplier side by side with No Faktur)
-    doc.setFontSize(12); // Set font size to 12
+    doc.setFontSize(12);
     doc.text(supplierText, 14, 30);
-    doc.text(noFakturText, 120, 30);  // Adjust the X position as needed
-  
+    doc.text(noFakturText, 120, 30);  
+
     // Second row (Alamat side by side with Tgl)
     doc.text(alamatText, 14, 40);
-    doc.text(tglText, 120, 40); // Adjust the X position as needed
-  
-    // ✅ Add product table
-// Calculate the subtotal
-const subtotal = transaction.products.reduce((sum, product) => {
-  return sum + (product.quantity * product.price_per_unit);
-}, 0);
+    doc.text(tglText, 120, 40);
 
-// Generate the table with borders but no background color
-autoTable(doc, {
-  startY: 50, // Start after the transaction details
-  head: [["Nama Barang", "Qty", "Harga Satuan", "Total"]],
-  body: [
-    ...transaction.products.map(product => [
-      product.product_name,
-      product.quantity,
-      `Rp. ${product.price_per_unit.toLocaleString()}`,
-      `Rp. ${(product.quantity * product.price_per_unit).toLocaleString()}`
-    ]),
-    // Adding subtotal row with no background color
-    [
-      '', // Empty column
-      '', // Empty column
-      'Subtotal', // Subtotal label
-      `Rp. ${subtotal.toLocaleString()}` // Subtotal value
-    ]
-  ],
-  theme: 'grid', // Use a grid theme for cleaner look
-  headStyles: {
-    fillColor: [255, 255, 255], // No background color for header (white)
-    textColor: [0, 0, 0], // Black text color
-    fontStyle: 'bold', // Bold font for header text
-    halign: 'center', // Center the header text
-    valign: 'middle', // Vertically align the header text
-  },
-  bodyStyles: {
-    fontSize: 10, // Smaller font size for table body
-    valign: 'middle', // Vertically align the body text
-    cellPadding: 5, // Add padding for cells
-  },
-  columnStyles: {
-    0: { cellWidth: 'auto', halign: 'center' }, // Column 1 styles
-    1: { cellWidth: 'auto', halign: 'center' }, // Column 2 styles
-    2: { cellWidth: 'auto', halign: 'center' }, // Column 3 styles
-    3: { cellWidth: 'auto', halign: 'center' }, // Column 4 styles
-  },
-  styles: {
-    cellWidth: 'auto', // Auto-adjust cell width based on content
-    overflow: 'linebreak', // Allow text to wrap in cells
-    halign: 'center', // Center align text in cells
-    valign: 'middle', // Vertically align text in cells
-    font: 'helvetica', // Use Helvetica font
-    fontSize: 10, // Set font size
-    fillColor: [255, 255, 255], // No background color for cells
-    lineWidth: 0.1, // Border line width
-    lineColor: [0, 0, 0], // Border line color (black)
-  }
-});
+    // ✅ Calculate the subtotal for price and total quantity (pcs)
+    const subtotal = transaction.products.reduce((sum, product) => sum + (product.quantity * product.price_per_unit), 0);
+    const subtotalPcs = transaction.products.reduce((sum, product) => sum + product.quantity, 0); // Total quantity (pcs)
 
-// ✅ Save the PDF
-doc.save("transaction_details.pdf");
+    // ✅ Generate the table
+    autoTable(doc, {
+        startY: 50, 
+        head: [["Nama Barang", "Qty", "Harga Satuan", "Total"]],
+        body: [
+            ...transaction.products.map(product => [
+                product.product_name,
+                `${product.quantity} pcs`, // Add "pcs" to quantity
+                `Rp. ${product.price_per_unit.toLocaleString()}`,
+                `Rp. ${(product.quantity * product.price_per_unit).toLocaleString()}`
+            ]),
+            // Subtotal row
+            [
+                'Subtotal', // Subtotal label
+                `${subtotalPcs} pcs`, // Subtotal quantity
+                '', // Empty column
+                `Rp. ${subtotal.toLocaleString()}` // Subtotal value
+            ]
+        ],
+        theme: 'grid',
+        headStyles: {
+            fillColor: [255, 255, 255], // No background color
+            textColor: [0, 0, 0], // Black text
+            fontStyle: 'bold',
+            halign: 'center',
+            valign: 'middle',
+        },
+        bodyStyles: {
+            fontSize: 10,
+            valign: 'middle',
+            cellPadding: 5,
+        },
+        columnStyles: {
+            0: { halign: 'center' },
+            1: { halign: 'center' },
+            2: { halign: 'center' },
+            3: { halign: 'center' },
+        },
+        styles: {
+            cellWidth: 'auto',
+            overflow: 'linebreak',
+            halign: 'center',
+            valign: 'middle',
+            font: 'helvetica',
+            fontSize: 10,
+            fillColor: [255, 255, 255],
+            lineWidth: 0.1,
+            lineColor: [0, 0, 0],
+        }
+    });
 
-  };
+    // ✅ Save the PDF
+    doc.save("transaction_details.pdf");
+};
+
   
   // const handleDownloadPaymentPDF = () => {
   //   if (!transaction) return;
@@ -287,7 +285,8 @@ doc.save("transaction_details.pdf");
   return (
     <div className="max-w-4xl mx-auto mt-16 p-12 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Detail Transaksi</h1>
-      <p><strong>Nama Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
+      <p><strong>Nama Supplier:</strong> {transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}</p>
+
       <p><strong>Tanggal Pembelian:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
       {/* <p><strong>Total Stok:</strong> {transaction.total_qty} pcs</p>  */}
       {/* <p><strong>Total Harga:</strong> Rp. {transaction.total_transaction_price.toLocaleString()}</p> */}

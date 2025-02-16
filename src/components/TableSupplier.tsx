@@ -84,9 +84,9 @@ export default function Component() {
       <main className="ml-48 mt-16 flex-1 p-4">
         <h2 className="mb-4 text-2xl font-semibold">Supplier</h2>
         <div className="overflow-x-auto">
-          <div className="mb-2 flex justify-between">
+          <div className="mb-2 ">
             {role === 1 && <AddButton />} {/* Add Supplier Button for Manager Only */}
-            <div className="mr-12 mt-6">Total Supplier: {suppliers.length}</div>
+            <div className="flex justify-end mr-12 mt-6">Total Supplier: {suppliers.length}</div>
           </div>
           <Table hoverable>
             <Table.Head>
