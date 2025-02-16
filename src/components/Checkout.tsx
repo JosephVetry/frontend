@@ -48,7 +48,7 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
     fetchProducts();
   }, [supplierId]);
 
-  if (loading) return <p>Loading products...</p>;
+  if (loading) return <p>Membuat produk...</p>;
   if (error) return <p>Error: {error}</p>;
 
   const formatRupiah = (amount: number) => {
@@ -126,8 +126,8 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-lg font-bold text-green-600">Transaction Successful!</h2>
-            <p className="text-gray-700">Redirecting to Dashboard...</p>
+            <h2 className="text-lg font-bold text-green-600">Transaksi berhasil!</h2>
+            <p className="text-gray-700">Mengarahkan ke Dashboard...</p>
           </div>
         </div>
       )}
