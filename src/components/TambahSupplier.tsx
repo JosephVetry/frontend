@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 interface Product {
   product_name: string;
-  sell_price: string;
+  sell_price: number; // Change to number
 }
 
 interface FormData {
@@ -19,7 +19,7 @@ const RegistrationForm = () => {
     supplier_name: "",
     phone_number: "",
     address: "",
-    products: [{ product_name: "", sell_price: "" }],
+    products: [{ product_name: "", sell_price: 0 }], // Initialize as number
   });
 
   const [message, setMessage] = useState<string>("");
@@ -30,26 +30,34 @@ const RegistrationForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const formatRupiah = (value: string) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(parseInt(value.replace(/[^0-9]/g, "") || "0"));
+  const formatRupiah = (value: number) => {
+    return new Intl.NumberFormat("id-ID").format(value);
   };
 
   const handleProductChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     const updatedProducts = [...formData.products];
-    updatedProducts[index] = {
-      ...updatedProducts[index],
-      [name]: name === "sell_price" ? formatRupiah(value) : value,
-    };
+
+    if (name === "sell_price") {
+      // Convert to number directly
+      const numericValue = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0;
+
+      updatedProducts[index] = {
+        ...updatedProducts[index],
+        sell_price: numericValue, // Store as number
+      };
+    } else {
+      updatedProducts[index] = {
+        ...updatedProducts[index],
+        [name]: value,
+      };
+    }
+
     setFormData({ ...formData, products: updatedProducts });
   };
 
   const addProduct = () => {
-    setFormData({ ...formData, products: [...formData.products, { product_name: "", sell_price: "" }] });
+    setFormData({ ...formData, products: [...formData.products, { product_name: "", sell_price: 0 }] });
   };
 
   const removeProduct = (index: number) => {
@@ -81,7 +89,7 @@ const RegistrationForm = () => {
         supplier_name: "",
         phone_number: "",
         address: "",
-        products: [{ product_name: "", sell_price: "" }],
+        products: [{ product_name: "", sell_price: 0 }],
       });
 
       setTimeout(() => {
@@ -114,7 +122,14 @@ const RegistrationForm = () => {
             <div key={index} className="flex flex-col gap-2 p-2 border rounded-lg shadow-sm">
               <Label>Produk {index + 1}</Label>
               <TextInput type="text" name="product_name" placeholder="Nama Produk" required value={product.product_name} onChange={(e) => handleProductChange(index, e)} />
-              <TextInput type="text" name="sell_price" placeholder="Harga" required value={product.sell_price} onChange={(e) => handleProductChange(index, e)} />
+              <TextInput
+                type="text"
+                name="sell_price"
+                placeholder="Rp. 0"
+                required
+                value={product.sell_price ? `Rp. ${formatRupiah(product.sell_price)}` : ""}
+                onChange={(e) => handleProductChange(index, e)}
+              />
               {index > 0 && <Button color="red" onClick={() => removeProduct(index)}>Hapus</Button>}
             </div>
           ))}

@@ -173,7 +173,7 @@ export default function TransactionsTable() {
               {paginatedTransactions.map((transaction) => (
                 <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="text-center text-gray-900">{transaction._id}</Table.Cell>
-                  <Table.Cell className="text-center text-gray-900">{transaction.id_supplier.supplier_name}</Table.Cell>
+                  {transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}
                   <Table.Cell className="text-center text-gray-900">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>
                   <Table.Cell className="text-center text-gray-900">Rp. {transaction.amount_paid.toLocaleString()}</Table.Cell>
                   <Table.Cell className={`text-center font-semibold ${transaction.remaining_debt === 0 ? "text-green-600" : "text-red-600"}`}>
