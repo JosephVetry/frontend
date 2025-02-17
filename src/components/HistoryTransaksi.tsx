@@ -24,22 +24,26 @@ export default function TransactionsTable() {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    axios.get("https://pharmacy-api-roan.vercel.app/api/transaction")
-      .then((response) => {
-        const data: Transaction[] = response.data;
-        console.log("Fetched Transactions:", data);
-
-        const sortedData = data.sort((a, b) => {
-          if (a.is_completed === b.is_completed) {
-            return new Date(b.purchase_date).getTime() - new Date(a.purchase_date).getTime();
-          }
-          return a.is_completed ? 1 : -1;
-        });
-
+    fetch("https://pharmacy-api-roan.vercel.app/api/transaction")
+      .then((response) => response.json())
+      .then((data: Transaction[]) => {
+        // Filter out transactions where id_supplier is missing
+        const validTransactions = data.filter(transaction => transaction.id_supplier);
+  
+        // Hitung sisa hutang dan tambahkan sebagai properti baru
+        const transactionsWithDebt = validTransactions.map(transaction => ({
+          ...transaction,
+          remaining_debt: Math.max(0, transaction.total_transaction_price - transaction.amount_paid)
+        }));
+  
+        // Urutkan berdasarkan No. Faktur (_id) secara ascending
+        const sortedData = transactionsWithDebt.sort((a, b) => a._id.localeCompare(b._id));
+  
         setTransactions(sortedData);
       })
       .catch((error) => console.error("Error fetching transactions:", error));
   }, []);
+  
 
   const totalPages = transactions.length > 0 ? Math.ceil(transactions.length / itemsPerPage) : 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -71,9 +75,12 @@ export default function TransactionsTable() {
                   {paginatedTransactions.map((transaction) => (
                     <Table.Row key={transaction._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell className="text-center text-gray-900">{transaction._id}</Table.Cell>
-                      <Table.Cell className="text-center text-gray-900">
-  {transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}
-</Table.Cell>
+                      {transaction.id_supplier && (
+  <Table.Cell className="text-center text-gray-900">
+    {transaction.id_supplier.supplier_name}
+  </Table.Cell>
+)}
+
 
                       <Table.Cell className="text-center text-gray-900">{transaction.total_qty} pcs</Table.Cell>
                       <Table.Cell className="text-center text-gray-900">Rp. {transaction.total_transaction_price.toLocaleString()}</Table.Cell>

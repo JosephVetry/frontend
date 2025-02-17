@@ -78,7 +78,10 @@ const TransactionDetails = () => {
     // ✅ Add transaction details side by side (Supplier | No Faktur) and (Alamat | Tgl)
     doc.setFont("helvetica", "normal");
 
-    const supplierText = `Supplier    : ${transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}`;
+    const supplierText = transaction.id_supplier 
+    ? `Supplier    : ${transaction.id_supplier.supplier_name}` 
+    : "";
+  
     const alamatText = `Alamat      : ${transaction.id_supplier?.address || "N/A"}`; // Replace with actual address field if available
     const noFakturText = `No Faktur   : ${transaction._id}`;
     const tglText = `Tanggal     : ${new Date(transaction.purchase_date).toLocaleDateString()}`;
@@ -285,7 +288,10 @@ const TransactionDetails = () => {
   return (
     <div className="max-w-4xl mx-auto mt-16 p-12 bg-white shadow-lg rounded-lg">
       <h1 className="text-2xl font-bold mb-4">Detail Transaksi</h1>
-      <p><strong>Nama Supplier:</strong> {transaction.id_supplier ? transaction.id_supplier.supplier_name : "Deleted Supplier"}</p>
+      {transaction.id_supplier && (
+  <p><strong>Nama Supplier:</strong> {transaction.id_supplier.supplier_name}</p>
+)}
+
 
       <p><strong>Tanggal Pembelian:</strong> {new Date(transaction.purchase_date).toLocaleString()}</p>
       {/* <p><strong>Total Stok:</strong> {transaction.total_qty} pcs</p>  */}
