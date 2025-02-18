@@ -305,7 +305,7 @@ const TransactionDetails = () => {
   <thead>
     <tr className="bg-gray-100">
       <th className="border border-gray-300 px-4 py-2 text-left">Nama Produk</th>
-      <th className="border border-gray-300 px-4 py-2 text-center">Stok</th>
+      <th className="border border-gray-300 px-4 py-2 text-center">Qty</th>
       <th className="border border-gray-300 px-4 py-2 text-center">Harga Satuan</th>
       <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
     </tr>

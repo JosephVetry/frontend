@@ -143,7 +143,7 @@ const Cart: React.FC<CartProps> = ({ supplierId: propSupplierId }) => {
                 <tr className="bg-gray-100">
                   <th className="border border-gray-300 px-4 py-2 text-left">Produk</th>
                   <th className="border border-gray-300 px-4 py-2 text-center">Harga</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Stok</th>
+                  <th className="border border-gray-300 px-4 py-2 text-center">Qty</th>
                   <th className="border border-gray-300 px-4 py-2 text-center">Total</th>
                   <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
                 </tr>
