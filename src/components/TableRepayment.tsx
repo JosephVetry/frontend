@@ -50,7 +50,7 @@ export default function TransactionsTable() {
   return (
     <div className="flex">
       <main className="flex-1 ml-48 mt-16 p-4">
-        <h2 className="text-2xl font-semibold mb-4">Data Transaksi</h2>
+        <h2 className="text-2xl font-semibold mb-4">Data Hutang</h2>
         <div className="overflow-x-auto">
           <Table hoverable>
             <Table.Head>
